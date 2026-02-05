@@ -10,6 +10,11 @@ import SvgSeparator from './components/SvgSeparator';
 function App() {
   return (
     <div className="App">
+      <div className="stars">
+        {[...Array(100)].map((_, i) => (
+          <div className="star" key={i} />
+        ))}
+      </div>
       <Header />
       <main>
         <Hero />
