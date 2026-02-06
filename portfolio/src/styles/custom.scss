@@ -98,6 +98,10 @@ body {
   max-width: 1000px;
   margin: 0 auto;
   padding: 0 1.5rem;
+
+  @media (max-width: 480px) {
+    padding: 0 1rem;
+  }
 }
 
 // Header Styling
@@ -136,11 +140,6 @@ body {
 
 .main-nav .nav-item {
   margin-left: 1.5rem;
-  // Media query for smaller screens: stack navigation items
-  @media (max-width: 768px) {
-    margin-left: 0;
-    margin-top: 0.5rem;
-  }
 }
 
 .main-nav .nav-link {
@@ -171,6 +170,68 @@ body {
   }
 }
 
+// Hamburger Menu styles
+.hamburger-menu {
+  display: none; // Hidden by default on larger screens
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1002; // Above header content
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 30px;
+    height: 25px;
+  }
+
+  .bar {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: $light;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+  }
+}
+
+// Mobile navigation specific styles
+@media (max-width: 768px) {
+  .main-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba($dark, 0.95); // Semi-transparent dark background
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: translateX(100%); // Hidden off-screen by default
+    transition: transform 0.3s ease-in-out;
+    z-index: 1001; // Below hamburger icon
+
+    &.menu-open {
+      transform: translateX(0); // Slide in
+    }
+
+    .nav-list {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .nav-item {
+      margin: 1rem 0;
+
+      .nav-link {
+        font-size: 1.5rem; // Larger font for mobile links
+      }
+    }
+  }
+}
+
 // Hero section specific
 .hero-section {
   min-height: 100vh; // Ensure it takes full viewport height
@@ -198,12 +259,28 @@ body {
     font-size: 4.5rem;
     margin-bottom: 1rem;
     color: $primary;
+
+    @media (max-width: 768px) {
+      font-size: 3.5rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 2.5rem;
+    }
   }
 
   .hero-subtitle {
     font-size: 1.5rem;
     margin-bottom: 2rem;
     color: $light;
+
+    @media (max-width: 768px) {
+      font-size: 1.2rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1rem;
+    }
   }
 
   .hero-astronaut-img {
@@ -218,6 +295,10 @@ body {
     
     path {
       fill: $light;
+    }
+
+    @media (max-width: 768px) {
+      display: none;
     }
   }
 }
@@ -291,6 +372,15 @@ section {
   color: $primary;
   position: relative;
 
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+  }
+
+
 
   &::after {
     content: '';
@@ -315,6 +405,10 @@ section {
     
     path {
       fill: $light;
+    }
+
+    @media (max-width: 768px) {
+      display: none;
     }
   }
 
@@ -358,6 +452,10 @@ section {
     path {
       fill: $light;
     }
+
+    @media (max-width: 768px) {
+      display: none;
+    }
   }
 }
 
@@ -373,6 +471,10 @@ section {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Responsive grid
     gap: 2rem;
     margin-top: 2rem;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
   }
 
   .project-card {
@@ -517,6 +619,11 @@ section {
   right: 20px;
   transform: translateY(-50%);
   z-index: 1001;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
 
   ul {
     list-style: none;
