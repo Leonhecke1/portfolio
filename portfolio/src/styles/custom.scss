@@ -27,11 +27,12 @@ $secondary: $dark-orange;  // Secondary darker orange
 
 // Body and general styling
 body {
+  scrollbar-width: unset !important; // Hide scrollbar for Firefox
   margin: 0;
   color: $light;
   font-family: 'Roboto Mono', monospace; // Retro monospace font
   min-height: 100vh;
-  background-color: $dark;
+ // background-color: $dark;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -47,17 +48,7 @@ body {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
 
-  &::after {
-    content: '';
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    width: 60vw; // Adjust size as needed
-    height: 60vh; // Adjust size as needed
-    background: radial-gradient(circle at bottom right, rgba($primary, 0.6), rgba($secondary, 0.3), transparent 70%);
-    z-index: -2; // Below content and stars
-    pointer-events: none; // Ensure it doesn't block interactions
-  }
+
 }
 
 .galaxy-background {
