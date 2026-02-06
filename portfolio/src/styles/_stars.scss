@@ -1,9 +1,10 @@
 // src/styles/_stars.scss
+@use 'sass:math';
 
 // Starry background effect
 @function random_range($min, $max) {
-  $rand: random();
-  $random_range: $min + floor($rand * ($max - $min + 1));
+  $rand: math.random();
+  $random_range: $min + math.floor($rand * ($max - $min + 1));
   @return $random_range;
 }
 
@@ -18,20 +19,30 @@
   .star {
     position: absolute;
     border-radius: 50%;
-    background-color: white;
+    background-color: $light; // Use light from theme
     animation-name: twinkle;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
-
+    
+    // Randomly assign some stars a warmer glow
     @for $i from 1 through 100 {
       &:nth-child(#{$i}) {
-        $size: random(3) + px;
+        $size: random_range(1, 3) + px; // Using my custom random_range
         width: $size;
         height: $size;
-        top: #{random(100)}vh;
-        left: #{random(100)}vw;
-        animation-duration: #{random(3) + 2}s;
-        animation-delay: #{random(3)}s;
+        top: #{random_range(0, 100)}vh;
+        left: #{random_range(0, 100)}vw;
+        animation-duration: #{random_range(2, 5)}s;
+        animation-delay: #{random_range(0, 3)}s;
+
+        // Make some stars orange for warm light effect
+        @if $i % 3 == 0 { // Every 3rd star
+          background-color: $soft-light-orange;
+          box-shadow: 0 0 5px $soft-light-orange;
+        } @else if $i % 5 == 0 { // Every 5th star
+          background-color: $primary;
+          box-shadow: 0 0 7px $primary;
+        }
       }
     }
   }
@@ -41,9 +52,11 @@
   0%, 100% {
     opacity: 0.5;
     transform: scale(0.8);
+    box-shadow: 0 0 2px rgba($light, 0.5);
   }
   50% {
     opacity: 1;
     transform: scale(1.2);
+    box-shadow: 0 0 8px rgba($light, 0.8);
   }
 }

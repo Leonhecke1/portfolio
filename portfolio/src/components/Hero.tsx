@@ -1,4 +1,5 @@
 import React from 'react';
+import AstronautSvg from '../assets/astronaut-astronomy-galaxy-svgrepo-com.svg?react'; // Import the new detailed astronaut SVG as a component
 
 const Hero: React.FC = () => {
 
@@ -9,6 +10,7 @@ const Hero: React.FC = () => {
         <p className="hero-subtitle">I am [Your Name], a software engineer navigating the cosmos of code.</p>
         <a href="#projects" className="btn-custom">View My Work</a>
       </div>
+      <AstronautSvg className="hero-astronaut-img" /> {/* Use the astronaut SVG component */}
     </section>
   );
 };
