@@ -1,16 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap');
+
 // src/styles/custom.scss
-@use 'sass:math'; // For random_range in keyframes
+
 
 // Customizations for a spacy/futuristic theme
 
 // Theme Colors
-$dark: #1a1a1a;    // Black
-$light: #f0f0f0;   // Light Grey/White
+$dark: #3D3132;    // Dark Charcoal Brown
+$light: #F7EFE0;   // Creamy Off-white
 
-// Core Orange Palette
-$warm-orange: #FF8C00; // Dark Orange, for warm lights
-$dark-orange: #CC7000; // A darker shade of orange
-$soft-light-orange: #FFDDAA; // A very soft, light orange for accents if needed
+// Core Retro Palette
+$warm-orange: #E07A5F; // Terracotta Orange
+$dark-orange: #B05B4A; // Darker Terracotta
+$soft-light-orange: #F2CC8F; // Muted Light Yellow/Orange
 
 // Assigning palette colors to main theme variables
 $primary: $warm-orange;    // Primary warm orange
@@ -27,7 +29,7 @@ $secondary: $dark-orange;  // Secondary darker orange
 body {
   margin: 0;
   color: $light;
-  font-family: 'Orbitron', sans-serif; // Futuristic font
+  font-family: 'Roboto Mono', monospace; // Retro monospace font
   min-height: 100vh;
   background-color: $dark;
   background-size: cover;
@@ -201,6 +203,7 @@ body {
   }
 
   .hero-title {
+    font-family: 'Press Start 2P', cursive; // Retro arcade font
     font-size: 4.5rem;
     margin-bottom: 1rem;
     color: $primary;
@@ -296,7 +299,7 @@ section {
   font-size: 2.5rem;
   color: $primary;
   position: relative;
-  text-shadow: 0 0 7px $soft-light-orange, 0 0 12px $primary;
+
 
   &::after {
     content: '';
