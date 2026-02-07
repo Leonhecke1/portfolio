@@ -227,7 +227,7 @@ const CssGridGenerator: React.FC = () => {
   return (
     <div className="css-grid-generator-container">
       <h2>CSS Grid Generator</h2>
-
+      <p>Hold ctrl (or cmd) and select Cells to merge them</p>
       <div className="grid-controls">
         <label>Rows</label>
         <input
