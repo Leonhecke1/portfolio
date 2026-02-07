@@ -312,12 +312,6 @@ body {
   }
 }
 
-@keyframes pulse {
-  0% { transform: scale(1); box-shadow: 0 0 10px rgba($primary, 0.6); } // Softened glow
-  50% { transform: scale(1.05); box-shadow: 0 0 20px rgba($primary, 0.8); } // Softened glow
-  100% { transform: scale(1); box-shadow: 0 0 10px rgba($primary, 0.6); } // Softened glow
-}
-
 // Buttons
 .btn-custom {
   background-color: $primary;
@@ -327,14 +321,24 @@ body {
   color: $dark;
   font-weight: bold;
   text-decoration: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
   display: inline-block; // For proper padding and margin
-  animation: pulse 2s infinite;
 
   &:hover {
     background-color: transparent;
     color: $primary;
-    box-shadow: 0 0 15px rgba($primary, 0.7); // Softened glow
+    box-shadow: 0 0 20px rgba($primary, 0.9); // More pronounced glow on hover
+    transform: translateY(-3px) scale(1.02); // Add a subtle lift and scale
+  }
+
+  &:disabled {
+    background-color: lighten($primary, 15%); // Lighter primary color
+    border-color: lighten($primary, 15%);
+    color: rgba($dark, 0.6); // Lighter dark color
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none; // Remove hover effects for disabled state
+    opacity: 0.7; // Slightly faded
   }
 }
 
@@ -346,14 +350,14 @@ body {
   color: $dark;
   font-weight: bold;
   text-decoration: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease;
-  display: inline-block;
-  animation: pulse 2s infinite;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
+  display: inline-block; // For proper padding and margin
 
   &:hover {
     background-color: transparent;
     color: $soft-light-orange;
-    box-shadow: 0 0 15px rgba($soft-light-orange, 0.7);
+    box-shadow: 0 0 20px rgba($soft-light-orange, 0.9); // More pronounced glow on hover
+    transform: translateY(-3px) scale(1.02); // Add a subtle lift and scale
   }
 }
 
@@ -391,6 +395,14 @@ section {
     margin: 1rem auto 0;
     box-shadow: 0 0 8px rgba($primary, 0.6); // Softened glow
   }
+}
+
+.section-subtitle {
+  text-align: center;
+  margin-top: -2.5rem;
+  margin-bottom: 3rem;
+  font-size: 1.1rem;
+  color: rgba($light, 0.7);
 }
 
   .contact-satellite-img {
@@ -466,36 +478,275 @@ section {
 
 // Projects Section Specific
 .projects-section {
-  .project-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); // Responsive grid
-    gap: 2rem;
-    margin-top: 2rem;
+  .constellation-map {
+    position: relative;
+    width: 100%;
+    height: 500px; // Adjust height as needed
+    margin: 3rem auto;
+    border: 1px solid rgba($primary, 0.2);
+    border-radius: 10px;
+    background: rgba($dark, 0.3);
+    backdrop-filter: blur(2px);
+  }
 
-    @media (max-width: 480px) {
-      grid-template-columns: 1fr;
+  .instruction-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba($dark, 0.7);
+    backdrop-filter: blur(5px);
+    z-index: 2;
+    opacity: 1;
+    transition: opacity 1s ease, visibility 1s ease;
+    visibility: visible;
+    border-radius: 10px;
+
+    p {
+      font-family: 'Press Start 2P', cursive;
+      color: $primary;
+      font-size: 1.5rem;
+      text-align: center;
+      padding: 1rem;
+      text-shadow: 0 0 10px rgba($primary, 0.7);
+      animation: text-subtle-glow 2s infinite alternate; // Changed animation
+    }
+
+    &.fading-out {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
   }
 
-  .project-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
+  .constellation-lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    stroke: rgba($primary, 0.3);
+    stroke-width: 1px;
+    stroke-dasharray: 5, 5;
+    animation: dash 20s linear infinite;
+  }
+
+  .project-star {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: $light;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+
     &:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba($primary, 0.3); // Softened glow
+      background-color: $primary;
+      transform: scale(1.8);
+      .star-label {
+        opacity: 1;
+        transform: translate(15px, -50%);
+      }
     }
+  }
 
-    .card-title {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-      color: $primary;
-    }
+  .star-glow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 200%;
+    height: 200%;
+    background-color: $primary;
+    border-radius: 50%;
+    opacity: 0.5;
+    filter: blur(10px);
+    animation: twinkle 4s ease-in-out infinite alternate; // Changed animation
+  }
 
-    .card-text {
-      font-size: 1rem;
-      color: $light;
-      margin-bottom: 1.5rem;
+  .star-label {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translate(10px, -50%);
+    white-space: nowrap;
+    color: $light;
+    background: rgba($dark, 0.8);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+  }
+}
+
+@keyframes twinkle {
+  0% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.1); }
+  100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -1000;
+  }
+}
+
+// Project Detail Page
+.project-detail-container {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: rgba($dark, 0.8);
+  border: 1px solid rgba($primary, 0.3);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  animation: modalFadeIn 0.5s ease-out;
+
+  .project-detail-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    color: $primary;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .project-detail-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .technologies {
+    text-align: center;
+    margin-bottom: 3rem;
+    .tech-tag {
+      background: $primary;
+      color: $dark;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin: 0 5px 10px 5px;
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: bold;
     }
+  }
+
+  .project-detail-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+/* Accessibility - Visually Hidden */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+// Project Detail Page
+.project-detail-container {
+  max-width: 800px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: rgba($dark, 0.8);
+  border: 1px solid rgba($primary, 0.3);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  animation: modalFadeIn 0.5s ease-out;
+
+  .project-detail-title {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    color: $primary;
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .project-detail-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .project-media-placeholder {
+    width: 100%;
+    height: 300px; /* Placeholder height */
+    background-color: rgba($primary, 0.1);
+    border: 1px dashed rgba($primary, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: rgba($primary, 0.7);
+    font-style: italic;
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    padding: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .technologies {
+    text-align: center;
+    margin-bottom: 3rem;
+    .tech-tag {
+      background: $primary;
+      color: $dark;
+      padding: 5px 10px;
+      border-radius: 5px;
+      margin: 0 5px 10px 5px;
+      display: inline-block;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+  }
+
+  .project-detail-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap; // Allow buttons to wrap on smaller screens
+    margin-bottom: 2rem;
+  }
+  
+  // Specific style for the "Back to Constellations" link if it's outside the links div
+  .back-to-constellations {
+    display: block;
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  &.project-not-found {
+    text-align: center;
+    .project-detail-title {
+      color: $soft-light-orange;
+    }
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -677,31 +928,121 @@ section {
 }
 
 @keyframes containerGlow {
-  0% { box-shadow: 0 0 10px rgba($primary, 0.3), inset 0 0 5px rgba($primary, 0.1); }
-  50% { box-shadow: 0 0 20px rgba($soft-light-orange, 0.5), inset 0 0 10px rgba($soft-light-orange, 0.2); }
-  100% { box-shadow: 0 0 10px rgba($primary, 0.3), inset 0 0 5px rgba($primary, 0.1); }
+  0% { box-shadow: 0 0 5px rgba($primary, 0.2), inset 0 0 2px rgba($primary, 0.05); } // Much more subtle
+  50% { box-shadow: 0 0 10px rgba($soft-light-orange, 0.3), inset 0 0 5px rgba($soft-light-orange, 0.1); } // Less intense
+  100% { box-shadow: 0 0 5px rgba($primary, 0.2), inset 0 0 2px rgba($primary, 0.05); } // Much more subtle
 }
 
 //@use 'sass:math'; // For random_range in keyframes
 
-// Cursor Effect
-.cursor-effect-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none; // Crucial: allows interaction with elements beneath
-  z-index: 9999; // Ensure it's on top
+// CSS Grid Generator Specific
+.css-grid-generator-container {
+  padding: 2rem;
+  background-color: rgba($dark, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba($primary, 0.2);
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+
+  h2 {
+    color: $primary;
+    font-size: 2rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 1rem;
+    color: rgba($light, 0.8);
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .grid-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    color: $light;
+    label {
+      font-weight: bold;
+    }
+    input[type="number"] {
+      width: 60px;
+      padding: 0.4rem;
+      border: 1px solid rgba($primary, 0.5);
+      border-radius: 4px;
+      background-color: rgba($dark, 0.8);
+      color: $light;
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+
+  .grid-display {
+    display: grid;
+    width: 100%;
+    max-width: 500px; /* Limit grid size for visual clarity */
+    aspect-ratio: 1 / 1; /* Keep grid square */
+    border: 2px solid $primary;
+    gap: 2px;
+    background-color: rgba($primary, 0.1);
+
+    .grid-cell {
+      background-color: rgba($primary, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: $light;
+      cursor: pointer;
+      transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease; // Add border-color to transition
+      position: relative; // For potential future merging/selection
+      border: 1px solid transparent; // For selection border
+
+      &:hover {
+        background-color: rgba($primary, 0.5);
+        transform: scale(1.02);
+      }
+
+      &.selected {
+        background-color: $soft-light-orange; // Use a distinct color for selected
+        border-color: $light; // Add a border for emphasis
+        box-shadow: 0 0 8px rgba($soft-light-orange, 0.7); // Subtle glow
+      }
+    }
+  }
+
+  .css-output {
+    width: 100%;
+    max-width: 600px;
+    h3 {
+      color: $primary;
+      margin-bottom: 0.5rem;
+    }
+    pre {
+      background-color: rgba($dark, 0.9);
+      border: 1px solid rgba($primary, 0.3);
+      border-radius: 4px;
+      padding: 1rem;
+      overflow-x: auto;
+      color: $soft-light-orange;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 0.9rem;
+      position: relative;
+    }
+    .btn-custom {
+      margin-top: 1rem;
+      width: fit-content;
+      align-self: flex-end;
+    }
+  }
 }
 
-.cursor-sparkle {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0;
-  transform: scale(0);
-  animation-name: sparkleFadeOut;
-  animation-timing-function: ease-out;
-  animation-fill-mode: forwards;
+.grid-actions{
+  display: flex;
+  gap:1rem;
 }
-
