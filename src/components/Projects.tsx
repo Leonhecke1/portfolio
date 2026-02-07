@@ -57,7 +57,7 @@ const Projects: React.FC = () => {
           {projects.map((project, index) => (
             <div
               key={project.id}
-              ref={el => starRefs.current[index] = el}
+              ref={el => { starRefs.current[index] = el; }}
               className="project-star"
               style={{ top: project.position.top, left: project.position.left }}
               onClick={() => handleStarClick(project)}
