@@ -49,6 +49,7 @@ const CssGridGenerator: React.FC = () => {
   const [gridConfig, setGridConfig] = useState({ rows: 4, cols: 4 });
   const [gridMatrix, setGridMatrix] = useState<string[][]>([]);
   const [selectedCells, setSelectedCells] = useState<Cell[]>([]);
+  const [pulsingArea, setPulsingArea] = useState<string | null>(null); // New state
 
   /* ---------- Init ---------- */
 
@@ -165,6 +166,12 @@ const CssGridGenerator: React.FC = () => {
 
     setGridMatrix(updated);
     setSelectedCells([]);
+
+    // Trigger pulse animation for the newly merged area
+    setPulsingArea(newArea);
+    setTimeout(() => {
+      setPulsingArea(null);
+    }, 600); // Duration matches CSS animation
   };
 
   const resetGrid = () =>
@@ -272,7 +279,7 @@ const CssGridGenerator: React.FC = () => {
             key={area}
             className={`grid-cell ${
               isCellSelected(row, col) ? 'selected' : ''
-            }`}
+            } ${area === pulsingArea ? 'merged-pulse' : ''}`}
             style={{ gridArea: area }}
             onClick={e => handleCellClick(row, col, e)}
           >

@@ -999,19 +999,20 @@ section {
       font-weight: bold;
       color: $light;
       cursor: pointer;
-      transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease; // Add border-color to transition
-      position: relative; // For potential future merging/selection
-      border: 1px solid transparent; // For selection border
-
+                transition: background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease; // Add border-color to transition
+                position: relative; // For potential future merging/selection
+                border: 1px solid transparent; // For selection border
       &:hover {
         background-color: rgba($primary, 0.5);
         transform: scale(1.02);
       }
 
       &.selected {
-        background-color: $soft-light-orange; // Use a distinct color for selected
-        border-color: $light; // Add a border for emphasis
-        box-shadow: 0 0 8px rgba($soft-light-orange, 0.7); // Subtle glow
+        background-color: $soft-light-orange;
+        border-color: $light;
+        box-shadow: 0 0 15px rgba($soft-light-orange, 0.9), 0 0 5px rgba($light, 0.7); // Stronger, pulsating glow
+        transform: scale(1.05); // Slightly larger
+        animation: twinkle-selected 1.5s infinite alternate ease-in-out;
       }
     }
   }
@@ -1042,7 +1043,41 @@ section {
   }
 }
 
+
+
 .grid-actions{
   display: flex;
   gap:1rem;
+}
+
+@keyframes twinkle-selected {
+  0% {
+    box-shadow: 0 0 15px rgba($soft-light-orange, 0.9), 0 0 5px rgba($light, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 25px rgba($soft-light-orange, 1), 0 0 10px rgba($light, 1);
+  }
+}
+
+/* New Genesis Pulse for Merging */
+@keyframes genesis-pulse {
+  0% {
+    transform: scale(0.8);
+    background-color: rgba($soft-light-orange, 0.7);
+    box-shadow: 0 0 10px rgba($soft-light-orange, 0.5);
+  }
+  50% {
+    transform: scale(1.02);
+    background-color: rgba($soft-light-orange, 1);
+    box-shadow: 0 0 20px rgba($soft-light-orange, 1), 0 0 10px rgba($light, 0.8);
+  }
+  100% {
+    transform: scale(1);
+    background-color: rgba($primary, 0.3);
+    box-shadow: none;
+  }
+}
+
+.grid-cell.merged-pulse {
+  animation: genesis-pulse 0.6s ease-out forwards;
 }
