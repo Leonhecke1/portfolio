@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom'; // Import useLocation
-import React, { useEffect } from 'react'; // Import useEffect
+import { useEffect } from 'react'; // Import useEffect
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideNav from './components/SideNav';
