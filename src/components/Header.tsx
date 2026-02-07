@@ -28,7 +28,7 @@ const Header: React.FC = () => {
   return (
     <header className="main-header">
       <div className="header-container">
-        <h1 className="site-title">My Portfolios</h1>
+        <h1 className="site-title">My Portfolio</h1>
         <button className="hamburger-menu" onClick={toggleMenu} aria-label="Toggle menu">
           <span className="bar"></span>
           <span className="bar"></span>
