@@ -23,8 +23,7 @@
     animation-name: twinkle;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
-    
-    // Randomly assign some stars a warmer glow
+
     @for $i from 1 through 100 {
       &:nth-child(#{$i}) {
         $size: random_range(1, 3) + px; // Using my custom random_range
