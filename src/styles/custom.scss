@@ -442,6 +442,10 @@ section {
     animation: containerGlow 4s ease-in-out infinite alternate;
   }
 
+  .section-title {
+    color: $light; /* Set section title to light to contrast with primary for this section */
+  }
+
   .about-text {
     font-size: 1.1rem;
     line-height: 1.8;
@@ -450,19 +454,74 @@ section {
     text-align: center;
   }
 
+  .about-content-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr; // Stack on smaller screens
+    }
+  }
+
+  .skills-container,
+  .languages-container {
+    background: rgba($primary, 0.05); // Very subtle background
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid rgba($primary, 0.2);
+    box-shadow: 0 0 10px rgba($primary, 0.1);
+    backdrop-filter: blur(3px);
+
+    h3 {
+      text-align: center;
+      color: $soft-light-orange;
+      margin-top: 0;
+      margin-bottom: 1.5rem;
+      font-size: 1.3rem;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.8rem;
+
+      li {
+        background: rgba($primary, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        border: 1px solid rgba($primary, 0.4);
+        cursor: help; // Indicate interactivity
+
+        &:hover {
+          background: $primary;
+          color: $dark;
+          transform: translateY(-3px) scale(1.05);
+          box-shadow: 0 0 15px rgba($primary, 0.6);
+        }
+      }
+    }
+  }
+
   .about-globe-img {
     position: absolute;
     top: 50%;
     right: 5%;
-    transform: translateY(-50%);
-    width: 150px;
+    transform: translateY(-50%) rotateY(0deg); /* Initial 3D transform */
+    width: 200px; /* Slightly larger */
     height: auto;
-    opacity: 0.6;
+    opacity: 0.4; /* More subtle */
     z-index: 0;
-    animation: floatGlobe 20s linear infinite;
+    animation: floatGlobe 20s linear infinite, rotateGlobe 30s linear infinite; /* Add 3D rotation */
     
     path {
-      fill: $light;
+      fill: $soft-light-orange; /* Change fill color for contrast */
     }
 
     @media (max-width: 768px) {
@@ -472,8 +531,14 @@ section {
 }
 
 @keyframes floatGlobe {
-  0% { transform: translateY(-50%) rotate(0deg); }
-  100% { transform: translateY(-50%) rotate(360deg); }
+  0% { transform: translateY(-50%) translateX(0px) rotateY(0deg); }
+  50% { transform: translateY(-55%) translateX(10px) rotateY(180deg); } /* Subtle horizontal drift and 3D rotation */
+  100% { transform: translateY(-50%) translateX(0px) rotateY(360deg); }
+}
+
+@keyframes rotateGlobe { /* Separate animation for continuous 3D rotation */
+  0% { transform: rotateY(0deg); }
+  100% { transform: rotateY(360deg); }
 }
 
 // Projects Section Specific
@@ -928,14 +993,24 @@ section {
 }
 
 @keyframes containerGlow {
-  0% { box-shadow: 0 0 5px rgba($primary, 0.2), inset 0 0 2px rgba($primary, 0.05); } // Much more subtle
-  50% { box-shadow: 0 0 10px rgba($soft-light-orange, 0.3), inset 0 0 5px rgba($soft-light-orange, 0.1); } // Less intense
-  100% { box-shadow: 0 0 5px rgba($primary, 0.2), inset 0 0 2px rgba($primary, 0.05); } // Much more subtle
+  0% { box-shadow: 0 0 3px rgba($primary, 0.1), inset 0 0 1px rgba($primary, 0.02); } // Even more subtle
+  50% { box-shadow: 0 0 8px rgba($soft-light-orange, 0.2), inset 0 0 3px rgba($soft-light-orange, 0.08); } // Less intense
+  100% { box-shadow: 0 0 3px rgba($primary, 0.1), inset 0 0 1px rgba($primary, 0.02); } // Even more subtle
 }
 
-//@use 'sass:math'; // For random_range in keyframes
 
-// CSS Grid Generator Specific
+@keyframes timelinePulse {
+  0% {
+    box-shadow: 0 0 10px rgba($primary, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba($soft-light-orange, 0.8);
+  }
+}
+
+
+
+
 .css-grid-generator-container {
   padding: 2rem;
   background-color: rgba($dark, 0.6);
