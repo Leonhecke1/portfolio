@@ -1,0 +1,114 @@
+[
+  {
+    "id": "mercury",
+    "name": "Mercury",
+    "type": "Terrestrial",
+    "mass_kg": 3.3011e23,
+    "diameter_km": 4879.4,
+    "distance_from_sun_au": 0.39,
+    "orbital_period_days": 87.97,
+    "surface_temperature_celsius": {
+      "min": -173,
+      "max": 427
+    },
+    "textureUrl": "/assets/textures/mercury.jpg"
+  },
+  {
+    "id": "venus",
+    "name": "Venus",
+    "type": "Terrestrial",
+    "mass_kg": 4.8675e24,
+    "diameter_km": 12103.6,
+    "distance_from_sun_au": 0.72,
+    "orbital_period_days": 224.7,
+    "surface_temperature_celsius": {
+      "min": 462,
+      "max": 462
+    },
+    "textureUrl": "/assets/textures/venus.jpg"
+  },
+  {
+    "id": "earth",
+    "name": "Earth",
+    "type": "Terrestrial",
+    "mass_kg": 5.972e24,
+    "diameter_km": 12742,
+    "distance_from_sun_au": 1,
+    "orbital_period_days": 365.25,
+    "surface_temperature_celsius": {
+      "min": -89.2,
+      "max": 57.8
+    },
+    "textureUrl": "/assets/textures/earth.jpg"
+  },
+  {
+    "id": "mars",
+    "name": "Mars",
+    "type": "Terrestrial",
+    "mass_kg": 6.4171e23,
+    "diameter_km": 6779,
+    "distance_from_sun_au": 1.52,
+    "orbital_period_days": 687,
+    "surface_temperature_celsius": {
+      "min": -153,
+      "max": 20
+    },
+    "textureUrl": "/assets/textures/mars.jpg"
+  },
+  {
+    "id": "jupiter",
+    "name": "Jupiter",
+    "type": "Gas Giant",
+    "mass_kg": 1.8982e27,
+    "diameter_km": 139820,
+    "distance_from_sun_au": 5.2,
+    "orbital_period_days": 4332.6,
+    "surface_temperature_celsius": {
+      "min": -145,
+      "max": -145
+    },
+    "textureUrl": "/assets/textures/jupiter.jpg"
+  },
+  {
+    "id": "saturn",
+    "name": "Saturn",
+    "type": "Gas Giant",
+    "mass_kg": 5.6834e26,
+    "diameter_km": 116460,
+    "distance_from_sun_au": 9.58,
+    "orbital_period_days": 10759.2,
+    "surface_temperature_celsius": {
+      "min": -178,
+      "max": -178
+    },
+    "textureUrl": "/assets/textures/saturn.jpg"
+  },
+  {
+    "id": "uranus",
+    "name": "Uranus",
+    "type": "Ice Giant",
+    "mass_kg": 8.6810e25,
+    "diameter_km": 50724,
+    "distance_from_sun_au": 19.22,
+    "orbital_period_days": 30687.1,
+    "surface_temperature_celsius": {
+      "min": -216,
+      "max": -216
+    },
+    "textureUrl": "/assets/textures/uranus.jpg"
+  },
+  {
+    "id": "neptune",
+    "name": "Neptune",
+    "type": "Ice Giant",
+    "mass_kg": 1.0241e26,
+    "diameter_km": 49244,
+    "distance_from_sun_au": 30.05,
+    "orbital_period_days": 60190,
+    "surface_temperature_celsius": {
+      "min": -214,
+      "max": -214
+    },
+    "textureUrl": "/assets/textures/neptune.jpg"
+  }
+]

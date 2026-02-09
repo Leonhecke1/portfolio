@@ -6,6 +6,7 @@ import SideNav from './components/SideNav';
 import GalaxyBackgroundSvg from './assets/astronomy-galaxy-space-svgrepo-com.svg?react';
 import HomePage from './components/HomePage';
 import ProjectDetail from './components/ProjectDetail';
+import PlanetaryDashboard from './components/PlanetaryDashboard'; // Import PlanetaryDashboard
 import { useNavigation } from './contexts/NavigationContext'; // Import useNavigation hook
 
 function App() {
@@ -51,6 +52,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
+        <Route path="/planetary-dashboard" element={<PlanetaryDashboard />} /> {/* New Route */}
       </Routes>
       
       <Footer />

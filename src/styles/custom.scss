@@ -125,8 +125,8 @@ body {
   padding: 0 1.5rem;
   
   @media (max-width: 768px) {
-    flex-wrap: wrap; // Allow items to wrap on smaller screens
-    justify-content: center; // Center items when wrapped
+    flex-wrap: nowrap; /* Prevent wrapping for main header row */
+    justify-content: space-between; /* Re-adjust for hamburger on the right */
   }
 }
 
@@ -134,6 +134,9 @@ body {
   font-size: 1.8rem;
   margin: 0;
   color: $primary;
+  @media (max-width: 768px) {
+    margin-right: auto; /* Push title to left */
+  }
 }
 
 .language-selector {
@@ -143,11 +146,7 @@ body {
   margin-right: 1.5rem; // Space from navigation
 
   @media (max-width: 768px) {
-    margin-left: 0; // Reset margin for mobile
-    margin-right: 0;
-    width: 100%; // Full width on smaller screens
-    justify-content: center; // Center buttons
-    margin-top: 1rem; // Space below title
+    display: none; // Hidden in header on mobile, moved inside nav
   }
 
   .btn-custom {
@@ -171,42 +170,44 @@ body {
   }
 }
 
-.main-nav .nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-}
-
-.main-nav .nav-item {
-  margin-left: 1.5rem;
-}
-
-.main-nav .nav-link {
-  color: $light;
-  text-decoration: none;
-  font-size: 1.1rem;
-  position: relative;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-
-  &:hover {
-    color: $primary;
-    text-shadow: 0 0 8px rgba($primary, 0.6); // Softened glow
+.main-nav {
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
   }
 
-  &::after {
-    content: '';
-    position: absolute;
-    width: 0;
-    height: 2px;
-    bottom: -5px;
-    left: 0;
-    background-color: $primary;
-    transition: width 0.3s ease;
+  .nav-item {
+    margin-left: 1.5rem;
   }
 
-  &:hover::after {
-    width: 100%;
+  .nav-link {
+    color: $light;
+    text-decoration: none;
+    font-size: 1.1rem;
+    position: relative;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+
+    &:hover {
+      color: $primary;
+      text-shadow: 0 0 8px rgba($primary, 0.6); // Softened glow
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -5px;
+      left: 0;
+      background-color: $primary;
+      transition: width 0.3s ease;
+    }
+
+    &:hover::after {
+      width: 100%;
+    }
   }
 }
 
@@ -225,6 +226,10 @@ body {
     justify-content: space-around;
     width: 30px;
     height: 25px;
+    position: relative; // Keep it relative for bars transformation
+    align-self: center; // Align with header items
+    margin-left: auto; // Push to the right on mobile
+    margin-right: 1.5rem; // Space from edge
   }
 
   .bar {
@@ -234,6 +239,24 @@ body {
     background-color: $light;
     border-radius: 2px;
     transition: all 0.3s ease;
+    position: absolute;
+    left: 0;
+
+    &:nth-child(1) { top: 0; }
+    &:nth-child(2) { top: 50%; transform: translateY(-50%); }
+    &:nth-child(3) { bottom: 0; }
+  }
+
+  &.menu-open {
+    .bar:nth-child(1) {
+      transform: translateY(11px) rotate(45deg);
+    }
+    .bar:nth-child(2) {
+      opacity: 0;
+    }
+    .bar:nth-child(3) {
+      transform: translateY(-11px) rotate(-45deg);
+    }
   }
 }
 
@@ -290,56 +313,6 @@ body {
       }
     }
   }
-
-  // Hamburger Menu animation for 'X'
-  .hamburger-menu {
-    position: relative; /* Keep it relative for bars transformation */
-    z-index: 1002; /* Ensure it's above the nav */
-    display: flex; /* Override display:none for mobile */
-    align-self: center; /* Align with header items */
-    margin-left: auto; /* Push to the right on mobile */
-    margin-right: 1.5rem; /* Space from edge */
-
-    .bar {
-      transition: all 0.3s ease;
-      position: absolute;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background-color: $light;
-      border-radius: 2px;
-
-      &:nth-child(1) { top: 0; }
-      &:nth-child(2) { top: 50%; transform: translateY(-50%); }
-      &:nth-child(3) { bottom: 0; }
-    }
-
-    &.menu-open {
-      .bar:nth-child(1) {
-        transform: translateY(11px) rotate(45deg);
-      }
-      .bar:nth-child(2) {
-        opacity: 0;
-      }
-      .bar:nth-child(3) {
-        transform: translateY(-11px) rotate(-45deg);
-      }
-    }
-  }
-
-  .header-container {
-    justify-content: space-between; /* Re-adjust for hamburger on the right */
-    flex-wrap: nowrap; /* Prevent wrapping for main header row */
-    padding: 0 1.5rem;
-
-    .site-title {
-      margin-right: auto; /* Push title to left */
-    }
-    // Language selector will be hidden here and moved inside the mobile nav
-    .language-selector {
-      display: none;
-    }
-  }
 }
 
 // Overlay for mobile nav
@@ -360,6 +333,8 @@ body {
     visibility: visible;
   }
 }
+
+// Hero section specific
 .hero-section {
   min-height: 100vh; // Ensure it takes full viewport height
   display: flex;
@@ -980,7 +955,7 @@ section {
       &:focus {
         outline: none;
         border-color: $primary;
-        box-shadow: 0 0 8px rgba($primary, 0.6); // Softened glow
+        box-shadow: 0 0 8px rgba($primary, 0.6);
       }
     }
 
@@ -1282,4 +1257,246 @@ section {
 
 .grid-cell.merged-pulse {
   animation: genesis-pulse 0.6s ease-out forwards;
+}
+
+/* Planetary Dashboard Specific Styles */
+.planetary-dashboard-section {
+  padding: 4rem 0;
+  text-align: center;
+}
+
+.dashboard-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+  padding: 1rem;
+  background-color: rgba($dark, 0.6);
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba($primary, 0.2);
+  backdrop-filter: blur(5px);
+
+  @media (max-width: 480px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: $light;
+
+  label {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  select, .btn-custom {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid rgba($primary, 0.5);
+    background-color: rgba($dark, 0.8);
+    color: $light;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:focus {
+      outline: none;
+      border-color: $primary;
+      box-shadow: 0 0 8px rgba($primary, 0.6);
+    }
+  }
+
+  .btn-custom {
+    background-color: $primary;
+    color: $dark;
+    border-color: $primary;
+
+    &:hover {
+      background-color: transparent;
+      color: $primary;
+    }
+  }
+}
+
+.planet-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.planet-card {
+  background-color: rgba($dark, 0.85);
+  border: 1px solid rgba($primary, 0.4);
+  border-radius: 10px;
+  padding: 1.5rem;
+  text-align: left;
+  box-shadow: 0 0 15px rgba($primary, 0.15);
+  backdrop-filter: blur(5px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 0 25px rgba($primary, 0.3);
+  }
+
+  .planet-image { /* This block is now unused, as we use 3D models */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1rem auto;
+    display: block;
+    border: 3px solid rgba($soft-light-orange, 0.7);
+    box-shadow: 0 0 15px rgba($soft-light-orange, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 0 0 25px rgba($soft-light-orange, 0.8);
+    }
+  }
+  
+  .planet-3d-model-wrapper {
+    width: 120px; /* Adjust size of the wrapper */
+    height: 120px; /* Adjust size of the wrapper */
+    margin: 0 auto 1rem auto; /* Center the model and add space below */
+    position: relative; /* Needed for Canvas positioning */
+  }
+
+
+  h3 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5rem;
+    color: $soft-light-orange;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+    color: $light;
+    
+    strong {
+      color: $primary;
+    }
+  }
+}
+
+.loading-message, .error-message {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: $soft-light-orange;
+}
+
+.error-message {
+  color: $warm-orange;
+}
+
+/* Technical Insights Section */
+.technical-insights-section {
+  max-width: 900px;
+  margin: 4rem auto 0 auto;
+  padding: 2rem;
+  background: rgba($dark, 0.85);
+  border: 1px solid rgba($primary, 0.3);
+  border-radius: 10px;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 0 20px rgba($primary, 0.2);
+
+  .section-title {
+    margin-bottom: 2rem;
+    color: $soft-light-orange; /* Distinct color for this section title */
+    
+    &::after {
+      background-color: $soft-light-orange;
+      box-shadow: 0 0 8px rgba($soft-light-orange, 0.6);
+    }
+  }
+
+  .technical-insights-content {
+    text-align: left;
+    font-size: 1rem;
+    line-height: 1.7;
+    color: rgba($light, 0.9);
+
+    p {
+      margin-bottom: 1rem;
+    }
+
+    strong {
+      color: $primary;
+    }
+  }
+}
+
+/* Technology Buttons (tech-tag tech-button) */
+.tech-button {
+  background-color: rgba($primary, 0.2); // Subtle background
+  border: 1px solid rgba($primary, 0.5);
+  color: $primary;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: normal;
+  transition: all 0.3s ease;
+  cursor: default; // Not truly interactive, but visually distinct
+
+  &:hover {
+    background-color: $primary;
+    color: $dark;
+    box-shadow: 0 0 10px rgba($primary, 0.6);
+    transform: translateY(-2px);
+  }
+}
+/* Code Snippets */
+.code-snippets-container {
+  margin-top: 2.5rem;
+  h3 {
+    text-align: center;
+    color: $soft-light-orange;
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.code-snippet-box {
+  background-color: rgba($dark, 0.95);
+  border: 1px solid rgba($primary, 0.4);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  overflow: hidden; /* Ensures code doesn't spill out */
+  box-shadow: 0 0 15px rgba($primary, 0.15);
+  
+  .code-snippet-header {
+    background-color: rgba($primary, 0.2);
+    padding: 0.7rem 1rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: $soft-light-orange;
+    border-bottom: 1px solid rgba($primary, 0.4);
+  }
+
+  pre {
+    margin: 0; /* Reset default pre margin */
+    background-color: transparent !important; /* Override SyntaxHighlighter default */
+    padding: 1rem !important; /* Ensure padding inside */
+    font-size: 0.9em;
+    line-height: 1.5;
+    overflow-x: auto; /* Enable horizontal scrolling for long lines */
+  }
+
+  code {
+    font-family: 'Roboto Mono', monospace; /* Ensure monospace font */
+  }
 }
