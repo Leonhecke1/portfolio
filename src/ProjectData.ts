@@ -105,11 +105,11 @@ const [gridState, setGridState] = useState<GridState>({
   },
   {
     id: 4,
-    title: 'Project Delta',
-    description: 'A brief description of Project Delta, highlighting its key features and technologies.',
-    technologies: ['Vue.js', 'Firebase', 'TailwindCSS'],
-    link: '#',
+    title: 'Project Delta Sandbox',
+    description: 'An interactive sandbox environment where users can drag, drop, and configure various UI and layout building blocks to create custom designs.',
+    technologies: ['React', 'TypeScript', 'State Management', 'Dynamic UI'],
+    link: '/project-delta',
     position: { top: '65%', left: '75%' },
-    technicalInsight: 'Project Delta highlights modern frontend development with Vue.js for a reactive user interface, backed by Firebase for a serverless architecture including authentication and real-time database capabilities. Styling is efficiently managed using TailwindCSS, demonstrating rapid UI development and responsive design principles. It emphasizes quick prototyping and scalable cloud integration.'
+    technicalInsight: 'This project demonstrates advanced React component composition, dynamic rendering of UI elements based on user interaction, and effective state management to handle the addition and configuration of building blocks. It serves as a foundation for a customizable design tool or prototyping environment, showcasing modular and extensible frontend architecture.'
   },
 ];

@@ -1500,3 +1500,264 @@ section {
     font-family: 'Roboto Mono', monospace; /* Ensure monospace font */
   }
 }
+
+/* Project Delta Sandbox Specific Styles */
+.project-delta-sandbox {
+  max-width: 1200px;
+  margin: 4rem auto;
+  padding: 2rem;
+  background: rgba($dark, 0.8);
+  border: 1px solid rgba($primary, 0.3);
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+  animation: modalFadeIn 0.5s ease-out;
+  color: $light;
+
+  h2 {
+    font-family: 'Press Start 2P', cursive;
+    color: $primary;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: rgba($primary, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba($primary, 0.2);
+
+    h3 {
+      color: $soft-light-orange;
+      margin: 0;
+      align-self: center;
+    }
+
+    button {
+      @extend .btn-custom; // Extend existing button styles
+      padding: 0.7rem 1.2rem;
+      font-size: 0.9rem;
+      &:hover {
+        transform: translateY(-2px) scale(1.02);
+      }
+    }
+  }
+
+  .sandbox-canvas {
+    min-height: 400px;
+    border: 2px dashed rgba($primary, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+    background: rgba($dark, 0.6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    p {
+      width: 100%;
+      color: rgba($light, 0.6);
+      font-style: italic;
+    }
+  }
+
+  /* Styles for individual blocks */
+  .button-block {
+    @extend .btn-custom; // Use existing button styling
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    box-shadow: 0 0 10px rgba($primary, 0.4);
+  }
+
+  .text-block {
+    background: rgba($primary, 0.05);
+    border: 1px solid rgba($primary, 0.2);
+    padding: 1rem;
+    border-radius: 5px;
+    color: $light;
+    box-shadow: 0 0 5px rgba($primary, 0.2);
+
+    p {
+      margin: 0;
+      text-align: left;
+    }
+  }
+
+  .grid-container-block {
+    background: rgba($primary, 0.05);
+    border: 1px dashed rgba($soft-light-orange, 0.5);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba($soft-light-orange, 0.3);
+    min-width: 250px; // Ensure grid is visible
+    flex-grow: 1; // Allow grid to take available space
+  }
+
+  /* Connection UI */
+  .draggable-block {
+    position: relative; // Needed for connect button positioning
+  }
+
+  .connect-button {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    background-color: $soft-light-orange;
+    color: $dark;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 24px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba($soft-light-orange, 0.8);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      background-color: lighten($soft-light-orange, 10%);
+    }
+  }
+  .remove-button {
+    position: absolute;
+    top: 30px;
+    right: -10px;
+    width: 24px;
+    height: 24px;
+    background-color: $soft-light-orange;
+    color: $dark;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    line-height: 24px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba($soft-light-orange, 0.8);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      background-color: lighten($soft-light-orange, 10%);
+    }
+  }
+
+  .connection-status {
+    text-align: center;
+    padding: 0.5rem;
+    background: rgba($soft-light-orange, 0.3);
+    color: $soft-light-orange;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    animation: text-subtle-glow 1.5s infinite alternate;
+
+    button {
+      @extend .btn-custom;
+      margin-left: 1rem;
+      padding: 0.2rem 0.8rem;
+      font-size: 0.8rem;
+    }
+  }
+
+  /* Modal Styling */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba($dark, 0.8);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: rgba($dark, 0.95);
+    border: 1px solid rgba($primary, 0.5);
+    border-radius: 10px;
+    padding: 2rem;
+    box-shadow: 0 0 20px rgba($primary, 0.3);
+    color: $light;
+    width: 90%;
+    max-width: 500px;
+    h3 {
+      color: $soft-light-orange;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    p {
+      text-align: left;
+      margin-bottom: 0.5rem;
+      strong {
+        color: $primary;
+      }
+    }
+    .form-group {
+      margin-bottom: 1rem;
+      label {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: rgba($light, 0.8);
+      }
+      select, input[type="text"] {
+        width: 100%;
+        padding: 0.6rem;
+        border-radius: 5px;
+        border: 1px solid rgba($primary, 0.3);
+        background-color: rgba($dark, 0.7);
+        color: $light;
+        font-size: 1rem;
+        &:focus {
+          outline: none;
+          border-color: $primary;
+          box-shadow: 0 0 8px rgba($primary, 0.5);
+        }
+      }
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+  }
+
+  /* Edit Connection Button */
+  .edit-connection-button {
+    background-color: $primary;
+    color: $dark;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba($primary, 0.6);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      background-color: lighten($primary, 10%);
+    }
+  }
+}
+
+
+

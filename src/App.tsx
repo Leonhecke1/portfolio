@@ -7,6 +7,7 @@ import GalaxyBackgroundSvg from './assets/astronomy-galaxy-space-svgrepo-com.svg
 import HomePage from './components/HomePage';
 import ProjectDetail from './components/ProjectDetail';
 import PlanetaryDashboard from './components/PlanetaryDashboard'; // Import PlanetaryDashboard
+import ProjectDeltaSandbox from './components/ProjectDeltaSandbox'; // Import ProjectDeltaSandbox
 import { useNavigation } from './contexts/NavigationContext'; // Import useNavigation hook
 
 function App() {
@@ -59,7 +60,8 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/project/:projectId" element={<ProjectDetail />} />
-        <Route path="/planetary-dashboard" element={<PlanetaryDashboard />} /> {/* New Route */}
+        <Route path="/planetary-dashboard" element={<PlanetaryDashboard />} />
+        <Route path="/project-delta" element={<ProjectDeltaSandbox />} /> {/* New Route for Project Delta */}
       </Routes>
       
       <Footer />
