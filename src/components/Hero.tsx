@@ -6,8 +6,8 @@ const Hero: React.FC = () => {
   return (
     <section id="home" className="hero-section">
       <div className="hero-content">
-        <h2 className="hero-title">Greetings, Explorer!</h2>
-        <p className="hero-subtitle">Ich mag noch viel mehr bir</p>
+        <h2 className="hero-title">Hey, ich bin Leon!</h2>
+        <p className="hero-subtitle">Frontend-Entwickler mit Leidenschaft für Weblösungen und Benutzerfreundlichkeit.</p>
         <a href="#projects" className="btn-custom">View My Work</a>
       </div>
       <AstronautSvg className="hero-astronaut-img" /> {/* Use the astronaut SVG component */}
