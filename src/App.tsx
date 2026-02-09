@@ -1,14 +1,16 @@
-import { Routes, Route, useLocation } from 'react-router-dom'; // Import useLocation
-import { useEffect } from 'react'; // Import useEffect
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideNav from './components/SideNav';
 import GalaxyBackgroundSvg from './assets/astronomy-galaxy-space-svgrepo-com.svg?react';
 import HomePage from './components/HomePage';
 import ProjectDetail from './components/ProjectDetail';
+import { useNavigation } from './contexts/NavigationContext'; // Import useNavigation hook
 
 function App() {
-  const location = useLocation(); // Initialize useLocation
+  const location = useLocation();
+  const { isMenuOpen, toggleMenu } = useNavigation(); // Use navigation context
 
   useEffect(() => {
     if (location.hash) {
@@ -17,13 +19,26 @@ function App() {
         element.scrollIntoView({ behavior: 'smooth' });
       }
     } else {
-      // Scroll to top if no hash, common behavior for new page loads
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [location]); // Re-run effect when location object changes
+  }, [location]);
+
+  // Effect to prevent body scrolling when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = ''; // Changed from 'unset' to ''
+    }
+    // Cleanup function
+    return () => {
+      document.body.style.overflow = ''; // Changed from 'unset' to ''
+    };
+  }, [isMenuOpen]);
 
   return (
     <div className="App">
+      {isMenuOpen && <div className="mobile-nav-overlay" onClick={toggleMenu}></div>} {/* Overlay */}
       <SideNav />
       <div className="stars">
         {[...Array(100)].map((_, i) => (

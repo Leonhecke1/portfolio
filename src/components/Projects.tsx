@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { projects, type Project } from '../ProjectData';
+import { useLanguage } from '../contexts/LanguageContext'; // Import useLanguage hook
 
 const Projects: React.FC = () => {
   const navigate = useNavigate();
   const [lines, setLines] = useState<Array<{x1: number, y1: number, x2: number, y2: number}>>([]);
   const [instructionClass, setInstructionClass] = useState('visible');
   const starRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const { t } = useLanguage(); // Use the language context
 
   useEffect(() => {
     const instructionTimer = setTimeout(() => {
@@ -43,11 +45,11 @@ const Projects: React.FC = () => {
   return (
     <section id="projects" className="projects-section">
       <div className="section-container">
-        <h2 className="section-title">Project Constellations</h2>
-        <p className="section-subtitle">An interactive map of my work. Click a star to begin.</p>
+        <h2 className="section-title">{t('projects.title')}</h2> {/* Translated title */}
+        <p className="section-subtitle">{t('projects.subtitle')}</p> {/* Translated subtitle */}
         <div className="constellation-map">
           <div className={`instruction-overlay ${instructionClass}`}>
-            <p>Click a star to explore a project</p>
+            <p>{t('projects.instruction')}</p> {/* Translated instruction */}
           </div>
           <svg className="constellation-lines">
             {lines.map((line, index) => (

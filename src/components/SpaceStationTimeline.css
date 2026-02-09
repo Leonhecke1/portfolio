@@ -163,14 +163,18 @@
 
   .timeline-item {
     width: 100%;
-    padding-left: 70px;
-    padding-right: 25px;
+    padding-inline: 0;
+    transform: translateX(0); /* Ensure items start on screen */
   }
 
+  .timeline-item.left {
+    transform: translateX(0); /* Ensure left items start on screen */
+  }
+  
   .timeline-item.right {
-    left: 0%;
-    padding-left: 70px;
-    padding-right: 25px;
+    left: 0%; /* Stack on the left side of the single line */
+    padding-inline: 0;
+    transform: translateX(0); /* Ensure right items start on screen */
   }
 
   .timeline-item.left::after,
