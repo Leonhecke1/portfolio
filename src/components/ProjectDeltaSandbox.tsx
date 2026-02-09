@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { DndContext, useDraggable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
-
+import { DndContext, useDraggable } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import ButtonBlock from './ProjectDeltaBlocks/ButtonBlock';
 import TextBlock from './ProjectDeltaBlocks/TextBlock';
 import ConnectionConfigModal from './ConnectionConfigModal'; // Import the new modal
@@ -120,17 +120,18 @@ const ProjectDeltaSandbox: React.FC = () => {
     setBlocks((prevBlocks) => [...prevBlocks, newBlock]);
   };
   
-  const handleDragEnd = ({delta, active}) => {
-    console.log('Drag End:', { delta, active });
-    setBlocks((prevBlocks) =>
-      prevBlocks.map((block) => {
-        if (block.id === active.id) {
-          return { ...block, x: block.x + delta.x, y: block.y + delta.y };
-        }
-        return block;
-      })
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { delta, active } = event;
+  
+    setBlocks(prevBlocks =>
+      prevBlocks.map(block =>
+        block.id === active.id
+          ? { ...block, x: block.x + delta.x, y: block.y + delta.y }
+          : block
+      )
     );
   };
+  
   
   const handleConnectStart = (sourceId: string) => {
     console.log('Connecting started from:', sourceId);
@@ -245,9 +246,11 @@ const ProjectDeltaSandbox: React.FC = () => {
   };
 
   const lineCoordinates = useMemo(() => {
-    // Map connections and pass the full connection object to getLineCoordinates
-    return connections.map(conn => getLineCoordinates(conn)).filter(Boolean);
+    return connections
+      .map(conn => getLineCoordinates(conn))
+      .filter((coords): coords is NonNullable<ReturnType<typeof getLineCoordinates>> => coords !== null);
   }, [connections, blocks]);
+  
 
 
   const handleRemoveBlock = (blockId: string) => {
