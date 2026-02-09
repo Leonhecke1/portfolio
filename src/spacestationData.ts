@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Define interfaces for different types of spacestation entries
 export interface ExperienceModule {
   type: 'experience';

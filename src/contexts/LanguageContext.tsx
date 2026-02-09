@@ -1,4 +1,5 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext } from 'react';
+import type { ReactNode } from 'react';
 
 // Define the shape of our language context
 interface LanguageContextType {
@@ -36,7 +37,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       'language.de': 'German',
       'about.title': 'About Me',
       'contact.title': 'Contact Me',
-      'projects.title': 'My Projects',
       'about.paragraph1': 'As a dedicated Frontend Developer with a passion for modern web technologies, I bring solid knowledge in React, TypeScript, and JavaScript. My expertise includes the conception, development, and maintenance of interactive web applications and Shopware stores.',
       'about.paragraph2': 'I place great importance on performance optimization, user-friendliness, and accessibility. Using agile methods like Scrum and an eye for detail, I create efficient and scalable solutions.',
       'about.skillsTitle': 'Skills:',
@@ -88,7 +88,6 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       'language.de': 'Deutsch',
       'about.title': 'Über mich',
       'contact.title': 'Kontaktieren Sie mich',
-      'projects.title': 'Meine Projekte',
       'about.paragraph1': 'Als engagierter Frontend-Entwickler mit einer Leidenschaft für moderne Webtechnologien bringe ich fundierte Kenntnisse in React, TypeScript und JavaScript mit. Meine Expertise umfasst die Konzeption, Entwicklung und Wartung von interaktiven Webanwendungen und Shopware-Shops.',
       'about.paragraph2': 'Ich lege großen Wert auf Performance-Optimierung, Benutzerfreundlichkeit und Barrierefreiheit. Mit agilen Methoden wie Scrum und einem Auge für Details schaffe ich effiziente und skalierbare Lösungen.',
       'about.skillsTitle': 'Qualifikationen:',

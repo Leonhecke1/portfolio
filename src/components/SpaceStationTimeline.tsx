@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { spacestationModules, type SpacestationModule } from '../spacestationData';
+import { spacestationModules } from '../spacestationData';
 import './SpaceStationTimeline.css'; // Will create this file next
 
 const SpaceStationTimeline: React.FC = () => {
@@ -50,7 +50,9 @@ const SpaceStationTimeline: React.FC = () => {
             <div
               key={module.id}
               id={module.id}
-              ref={(el) => (timelineRefs.current[index] = el)}
+              ref={(el) => {
+                timelineRefs.current[index] = el;
+              }}
               className={`timeline-item ${index % 2 === 0 ? 'left' : 'right'} ${
                 activeItems.has(module.id) ? 'active' : ''
               }`}
