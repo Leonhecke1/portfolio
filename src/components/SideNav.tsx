@@ -9,7 +9,7 @@ const SideNav: React.FC = () => {
     const handleScroll = () => {
       // Only update active section if on the homepage
       if (location.pathname === '/') {
-        const sections = ['home', 'about', 'projects', 'contact'];
+        const sections = ['home', 'about', 'spacestation-timeline', 'projects', 'contact'];
         // Adjust scroll position check to be more forgiving or centered
         const scrollPosition = window.scrollY + window.innerHeight / 2.5; // Slightly above center
 
@@ -69,6 +69,16 @@ const SideNav: React.FC = () => {
             <span>About</span>
           </Link>
         </li>
+        <li>
+          <Link
+            to="/#spacestation-timeline"
+            className={activeSection === 'spacestation-timeline' ? 'active' : ''}
+            onClick={(e) => handleNavLinkClick(e, 'spacestation-timeline')}
+          >
+            <span>Werdegang</span>
+          </Link>
+        </li>
+
         <li>
           <Link
             to="/#projects"
