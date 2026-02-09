@@ -22,7 +22,12 @@ function App() {
     } else {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-  }, [location]);
+
+    // Close the menu automatically when the route changes
+    if (isMenuOpen) {
+      toggleMenu();
+    }
+  }, [location, isMenuOpen, toggleMenu]); // Add isMenuOpen and toggleMenu as dependencies
 
   // Effect to prevent body scrolling when mobile menu is open
   useEffect(() => {
