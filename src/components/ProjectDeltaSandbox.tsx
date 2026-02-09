@@ -309,7 +309,7 @@ const ProjectDeltaSandbox: React.FC = () => {
   
   return (
     <div className="project-delta-sandbox">
-      <h2>Project Delta Sandbox</h2>
+      <h2>Sandbox Elements</h2>
       <p>This is where users can combine different building blocks.</p>
 
       {connecting.sourceId && (

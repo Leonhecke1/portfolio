@@ -9,7 +9,7 @@ interface TextBlockProps {
 const TextBlock: React.FC<TextBlockProps> = ({ content = 'This is a text block.', style, onClick }) => {
   return (
     <div className="text-block" style={style} onClick={onClick}>
-      <p>{content}</p>
+      {content}
     </div>
   );
 };

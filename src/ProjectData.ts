@@ -105,11 +105,51 @@ const [gridState, setGridState] = useState<GridState>({
   },
   {
     id: 4,
-    title: 'Project Delta Sandbox',
+    title: 'Sandbox',
     description: 'An interactive sandbox environment where users can drag, drop, and configure various UI and layout building blocks to create custom designs.',
-    technologies: ['React', 'TypeScript', 'State Management', 'Dynamic UI'],
-    link: '/project-delta',
+    technologies: ['React', 'TypeScript', 'State Management', 'Dynamic UI', 'dnd-kit'],
+    link: '#',
     position: { top: '65%', left: '75%' },
-    technicalInsight: 'This project demonstrates advanced React component composition, dynamic rendering of UI elements based on user interaction, and effective state management to handle the addition and configuration of building blocks. It serves as a foundation for a customizable design tool or prototyping environment, showcasing modular and extensible frontend architecture.'
+    technicalInsight: 'This project demonstrates advanced React component composition, dynamic rendering of UI elements based on user interaction, and effective state management to handle the addition and configuration of building blocks. It serves as a foundation for a customizable design tool or prototyping environment, showcasing modular and extensible frontend architecture. Key technical aspects include the use of `dnd-kit` for drag-and-drop functionality, dynamic SVG rendering for connection lines, and a modal-based configuration system for inter-block interactions.',
+    codeSnippets: [
+      {
+        title: 'Block Interface Definition',
+        code: `export interface Block {
+  id: string;
+  type: BlockType;
+  x: number;
+  y: number;
+  color?: string;
+  bgColor?: string;
+  props?: any;
+}`,
+        language: 'typescript'
+      },
+      {
+        title: 'Draggable Component Structure',
+        code: `function Draggable(props: DraggableBlockProps) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id: props.id });
+  return (
+    <div ref={setNodeRef} style={{ transform: CSS.Translate.toString(transform) }} {...listeners} {...attributes}>
+      {props.children}
+      {/* Buttons for remove/connect */}
+    </div>
+  );
+}`,
+        language: 'tsx'
+      },
+      {
+        title: 'Save Connection Logic',
+        code: `const handleSaveConnectionConfig = (configuredConnection: Connection) => {
+  if (configuredConnection.id) {
+    setConnections(prev => prev.map(conn => conn.id === configuredConnection.id ? configuredConnection : conn));
+  } else {
+    setConnections(prev => [...prev, { ...configuredConnection, id: \`conn-\${Date.now()}\` }]);
+  }
+  // Close modal logic
+};`,
+        language: 'typescript'
+      }
+    ]
   },
 ];

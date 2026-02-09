@@ -4,6 +4,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { projects } from '../ProjectData';
 import CssGridGenerator from './CssGridGenerator';
 import PlanetaryDashboard from './PlanetaryDashboard';
+import ProjectDeltaSandbox from './ProjectDeltaSandbox'; // Import ProjectDeltaSandbox
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'; // Import SyntaxHighlighter
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // Import a style
 
@@ -41,6 +42,8 @@ const ProjectDetail: React.FC = () => {
         return <CssGridGenerator />;
       case 2:
         return <PlanetaryDashboard />;
+      case 4: // Add case for ProjectDeltaSandbox
+        return <ProjectDeltaSandbox />;
       default:
         return (
           <>
@@ -95,7 +98,7 @@ const ProjectDetail: React.FC = () => {
         <h2 className="sr-only">Project Navigation</h2>
         <div className="project-detail-links">
           <button onClick={goToPreviousProject} className="btn-custom" aria-label="Go to previous project">Previous Project</button>
-          {currentProjectId !== 1 && currentProjectId !== 2 && (
+          {currentProjectId !== 1 && currentProjectId !== 2 && currentProjectId !== 4 && (
             <a href={project.link} className="btn-custom" target="_blank" rel="noopener noreferrer" aria-label={`View live version of ${project.title}`}>View Live Project</a>
           )}
           <button onClick={goToNextProject} className="btn-custom" aria-label="Go to next project">Next Project</button>
