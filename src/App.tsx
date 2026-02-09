@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react'; // Import useRef
 import Header from './components/Header';
 import Footer from './components/Footer';
 import SideNav from './components/SideNav';
@@ -12,6 +12,7 @@ import { useNavigation } from './contexts/NavigationContext'; // Import useNavig
 function App() {
   const location = useLocation();
   const { isMenuOpen, toggleMenu } = useNavigation(); // Use navigation context
+  const prevPathname = useRef(location.pathname); // Track previous pathname
 
   useEffect(() => {
     if (location.hash) {
@@ -23,11 +24,12 @@ function App() {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Close the menu automatically when the route changes
-    if (isMenuOpen) {
+    // Close the menu automatically ONLY if the pathname changes AND it's open
+    if (isMenuOpen && location.pathname !== prevPathname.current) {
       toggleMenu();
     }
-  }, [location, isMenuOpen, toggleMenu]); // Add isMenuOpen and toggleMenu as dependencies
+    prevPathname.current = location.pathname; // Update previous pathname for next render
+  }, [location.pathname, isMenuOpen, toggleMenu]); // Dependencies updated to location.pathname
 
   // Effect to prevent body scrolling when mobile menu is open
   useEffect(() => {
