@@ -91,7 +91,7 @@
 
 .timeline-content {
   padding: 20px 30px;
-  background-color: var(--color-card-background); /* Assuming a CSS variable for card background */
+  background-color: #3d3132e6; /* Assuming a CSS variable for card background */
   position: relative;
   border-radius: 6px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

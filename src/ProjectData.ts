@@ -105,7 +105,7 @@ const [gridState, setGridState] = useState<GridState>({
   },
   {
     id: 4,
-    title: 'Sandbox',
+    title: 'WIP Sandbox',
     description: 'An interactive sandbox environment where users can drag, drop, and configure various UI and layout building blocks to create custom designs.',
     technologies: ['React', 'TypeScript', 'State Management', 'Dynamic UI', 'dnd-kit'],
     link: '#',
