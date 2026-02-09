@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../contexts/LanguageContext';
-import PlanetCanvas from './Planet3DModel'; // Import PlanetCanvas
 
 interface Planet {
   id: string;
@@ -136,11 +135,6 @@ const PlanetaryDashboard: React.FC = () => {
       <div className="planet-cards-grid">
         {filteredPlanets.map(planet => (
           <div key={planet.id} className="planet-card">
-            {planet.textureUrl && (
-              <div className="planet-3d-model-wrapper">
-                <PlanetCanvas textureUrl={planet.textureUrl} size={1.2} rotationSpeed={0.003} />
-              </div>
-            )}
             <h3>{planet.name}</h3>
             <p><strong>{t('dashboard.type')}:</strong> {planet.type}</p>
             <p><strong>{t('dashboard.mass')}:</strong> {planet.mass_kg.toExponential(2)} kg</p>

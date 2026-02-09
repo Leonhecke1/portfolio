@@ -10,8 +10,7 @@
     "surface_temperature_celsius": {
       "min": -173,
       "max": 427
-    },
-    "textureUrl": "/assets/textures/mercury.jpg"
+    }
   },
   {
     "id": "venus",
@@ -24,8 +23,7 @@
     "surface_temperature_celsius": {
       "min": 462,
       "max": 462
-    },
-    "textureUrl": "/assets/textures/venus.jpg"
+    }
   },
   {
     "id": "earth",
@@ -38,8 +36,7 @@
     "surface_temperature_celsius": {
       "min": -89.2,
       "max": 57.8
-    },
-    "textureUrl": "/assets/textures/earth.jpg"
+    }
   },
   {
     "id": "mars",
@@ -52,8 +49,7 @@
     "surface_temperature_celsius": {
       "min": -153,
       "max": 20
-    },
-    "textureUrl": "/assets/textures/mars.jpg"
+    }
   },
   {
     "id": "jupiter",
@@ -66,8 +62,7 @@
     "surface_temperature_celsius": {
       "min": -145,
       "max": -145
-    },
-    "textureUrl": "/assets/textures/jupiter.jpg"
+    }
   },
   {
     "id": "saturn",
@@ -80,8 +75,7 @@
     "surface_temperature_celsius": {
       "min": -178,
       "max": -178
-    },
-    "textureUrl": "/assets/textures/saturn.jpg"
+    }
   },
   {
     "id": "uranus",
@@ -94,8 +88,7 @@
     "surface_temperature_celsius": {
       "min": -216,
       "max": -216
-    },
-    "textureUrl": "/assets/textures/uranus.jpg"
+    }
   },
   {
     "id": "neptune",
@@ -108,7 +101,6 @@
     "surface_temperature_celsius": {
       "min": -214,
       "max": -214
-    },
-    "textureUrl": "/assets/textures/neptune.jpg"
+    }
   }
 ]
