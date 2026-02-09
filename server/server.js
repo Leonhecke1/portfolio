@@ -5,7 +5,6 @@ const path = require('path');
 const app = express();
 const port = 3001;
 
-// CORS ist optional, wenn alles über dieselbe Domain läuft
 app.use(cors());
 
 app.get('/api/planets', (req, res) => {
@@ -13,7 +12,6 @@ app.get('/api/planets', (req, res) => {
   res.json(planets);
 });
 
-// Nur falls Express auch statisch serven soll (optional)
 app.use(express.static(path.join(__dirname, '../dist')));
 
 app.use((req, res, next) => {
