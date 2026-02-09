@@ -35,19 +35,17 @@ const ConnectionConfigModal: React.FC<ConnectionConfigModalProps> = ({
 
   const handleSave = () => {
     if (initialConnection.sourceId && initialConnection.targetId) {
-      const connectionToSave: Connection = {
+      onSave({
+        id: initialConnection.id || "",
         sourceId: initialConnection.sourceId,
         targetId: initialConnection.targetId,
         triggerEvent,
         actionType,
         actionValue,
-        id: initialConnection.id || `conn-${Date.now()}`, // <-- always ensure id exists
-      };
-      onSave(connectionToSave);
+      });
     }
     onClose();
   };
-  
 
   const handleDelete = () => {
     if (initialConnection.id) {

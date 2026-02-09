@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import { CSS } from '@dnd-kit/utilities';
 import { DndContext, useDraggable } from '@dnd-kit/core';
-import type { DragEndEvent } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core'; 
 import ButtonBlock from './ProjectDeltaBlocks/ButtonBlock';
 import TextBlock from './ProjectDeltaBlocks/TextBlock';
 import ConnectionConfigModal from './ConnectionConfigModal'; // Import the new modal
