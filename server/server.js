@@ -5,46 +5,25 @@ const path = require('path');
 const app = express();
 const port = 3001;
 
+// CORS ist optional, wenn alles über dieselbe Domain läuft
 app.use(cors());
 
-// API endpoint to get planet data
 app.get('/api/planets', (req, res) => {
   const planets = require('./planets.json');
   res.json(planets);
 });
 
-// Serve the static files of the React app
-// This must be BEFORE the catch-all for index.html
+// Nur falls Express auch statisch serven soll (optional)
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// For any GET request that hasn't been handled by previous routes (APIs or static files),
-// send the React app's index.html. This is crucial for client-side routing.
-// This should be the very LAST middleware/route.
 app.use((req, res, next) => {
-  if (req.method === 'GET' && !req.path.startsWith('/api')) { // Only for GET and not API paths
+  if (req.method === 'GET' && !req.path.startsWith('/api')) {
     res.sendFile(path.resolve(__dirname, '../dist', 'index.html'));
   } else {
-    next(); // Pass control to the next middleware if it's not a GET request or it's an API path
+    next();
   }
 });
 
-// Global error handling for unhandled promise rejections and uncaught exceptions
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
-  process.exit(1); // Exit with a failure code
+app.listen(port, '127.0.0.1', () => {
+  console.log(`API läuft intern auf http://127.0.0.1:${port}`);
 });
-
-process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
-  process.exit(1); // Exit with a failure code
-});
-
-
-app.listen(port, () => {
-  console.log(`Planetary Data API listening at http://localhost:${port}`);
-  console.log(`Serving React app from http://localhost:${port}`);
-});
-
-// Diagnostic hack: Keep the event loop alive
-setInterval(() => {}, 1000 * 60 * 60); // Keep alive for 1 hour, doing nothing
-
