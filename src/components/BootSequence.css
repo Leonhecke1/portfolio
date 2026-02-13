@@ -1,0 +1,182 @@
+/* Boot Sequence - Terminal Style Animation */
+
+.boot-sequence {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #030308;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+.boot-terminal {
+  width: 90%;
+  max-width: 700px;
+  background: linear-gradient(180deg, rgba(5, 5, 20, 0.98) 0%, rgba(10, 10, 30, 0.98) 100%);
+  border: 1px solid #00f3ff30;
+  border-radius: 4px;
+  box-shadow:
+    0 0 60px rgba(0, 243, 255, 0.1),
+    inset 0 0 60px rgba(0, 243, 255, 0.02);
+  overflow: hidden;
+}
+
+.boot-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(90deg, #00f3ff10, transparent);
+  border-bottom: 1px solid #00f3ff20;
+}
+
+.boot-icon {
+  font-size: 24px;
+  color: #00f3ff;
+  text-shadow: 0 0 10px #00f3ff;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { text-shadow: 0 0 10px #00f3ff; }
+  50% { text-shadow: 0 0 20px #00f3ff, 0 0 30px #00f3ff; }
+}
+
+.boot-title {
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  font-weight: bold;
+  color: #00f3ff;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.boot-content {
+  padding: 30px 20px;
+  min-height: 300px;
+}
+
+.boot-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  color: #7a9eb8;
+}
+
+.line-prefix {
+  color: #00f3ff60;
+  font-size: 12px;
+}
+
+.line-text {
+  flex: 1;
+}
+
+.line-cursor {
+  color: #00f3ff;
+  animation: blink-cursor 0.8s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.boot-line.success {
+  color: #00ff88;
+}
+
+.success-check {
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88;
+  margin-left: 8px;
+}
+
+.boot-progress {
+  margin-top: 30px;
+  height: 2px;
+  background: #00f3ff20;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00f3ff, #7000ff);
+  box-shadow: 0 0 10px #00f3ff;
+}
+
+.boot-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #00f3ff08;
+  border-top: 1px solid #00f3ff10;
+}
+
+.footer-text {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #00f3ff60;
+  letter-spacing: 2px;
+}
+
+.footer-version {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: #7000ff80;
+}
+
+/* Scanline overlay */
+.scanlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 243, 255, 0.03) 2px,
+    rgba(0, 243, 255, 0.03) 4px
+  );
+  pointer-events: none;
+  animation: scanline-move 8s linear infinite;
+}
+
+@keyframes scanline-move {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .boot-terminal {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .boot-content {
+    padding: 20px 15px;
+    min-height: 250px;
+  }
+
+  .boot-line {
+    font-size: 12px;
+    gap: 8px;
+  }
+
+  .boot-title {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+}

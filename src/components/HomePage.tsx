@@ -1,23 +1,11 @@
-import Hero from './Hero';
-import About from './About';
-import SpaceStationTimeline from './SpaceStationTimeline';
-import Projects from './Projects';
-import Contact from './Contact';
-import SvgSeparator from './SvgSeparator';
+import { ThemeProvider } from '../contexts/MissionControlContext';
+import MissionControl from './MissionControl';
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
-    <main>
-      <Hero />
-      <SvgSeparator />
-      <About />
-      <SvgSeparator />
-      <SpaceStationTimeline /> {/* Render the new SpaceStationTimeline component */}
-      <SvgSeparator />
-      <Projects />
-      <SvgSeparator />
-      <Contact />
-    </main>
+    <ThemeProvider>
+      <MissionControl />
+    </ThemeProvider>
   );
 };
 

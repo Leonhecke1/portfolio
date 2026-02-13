@@ -1,8 +1,7 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { useEffect, useRef } from 'react'; // Import useRef
-import Header from './components/Header';
+//import Header from './components/Header';
 import Footer from './components/Footer';
-import SideNav from './components/SideNav';
 import GalaxyBackgroundSvg from './assets/astronomy-galaxy-space-svgrepo-com.svg?react';
 import HomePage from './components/HomePage';
 import ProjectDetail from './components/ProjectDetail';
@@ -48,14 +47,12 @@ function App() {
   return (
     <div className="App">
       {isMenuOpen && <div className="mobile-nav-overlay" onClick={toggleMenu}></div>} {/* Overlay */}
-      <SideNav />
       <div className="stars">
         {[...Array(100)].map((_, i) => (
           <div className="star" key={i} />
         ))}
       </div>
       <GalaxyBackgroundSvg className="galaxy-background" />
-      <Header />
       
       <Routes>
         <Route path="/" element={<HomePage />} />

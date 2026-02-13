@@ -1,0 +1,241 @@
+/* Clean Space Mission Control HUD */
+
+/* === HUD Container === */
+.hud-container {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  padding: 3vh 3vw;
+}
+
+.hud-container > * {
+  pointer-events: auto;
+}
+
+.hud-container.warping {
+  pointer-events: none;
+}
+
+/* === Corner Accents === */
+.corner-accent {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  opacity: 0.5;
+}
+
+.corner-accent svg {
+  width: 100%;
+  height: 100%;
+}
+
+.corner-tl { top: 2vh; left: 2vw; }
+.corner-tr { top: 2vh; right: 2vw; }
+.corner-bl { bottom: 2vh; left: 2vw; }
+.corner-br { bottom: 2vh; right: 2vw; }
+
+/* === Top Left - System Status === */
+.hud-top-left {
+  position: absolute;
+  top: 3vh;
+  left: 3vw;
+}
+
+.system-status-floating {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-indicator 2s ease-in-out infinite;
+}
+
+@keyframes pulse-indicator {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+.status-text {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: #8899aa;
+}
+
+.status-value {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 13px;
+  color: #50b093;
+  font-weight: 500;
+}
+
+.status-label {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #556677;
+  margin-left: 4px;
+}
+
+/* === Top Center - Clock === */
+.hud-top-center {
+  position: absolute;
+  top: 3vh;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.clock-floating {
+  padding: 8px 20px;
+  background: rgba(10, 10, 26, 0.5);
+  border-radius: 20px;
+  backdrop-filter: blur(10px);
+}
+
+.clock-time {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: #fed992;
+  text-shadow: 0 0 15px rgba(254, 217, 146, 0.5);
+}
+
+/* === Top Right - Mission Log === */
+.hud-top-right {
+  position: absolute;
+  top: 3vh;
+  right: 3vw;
+  max-width: 280px;
+}
+
+.mission-log-floating {
+  background: rgba(10, 10, 26, 0.6);
+  border-radius: 12px;
+  padding: 16px 20px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(80, 176, 147, 0.15);
+}
+
+.log-terminal {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 11px;
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+}
+
+.log-line {
+  color: #8899aa;
+}
+
+.log-cursor {
+  color: #50b093;
+  animation: blink-cursor 0.8s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* === Bottom Center - Floating Dock === */
+.hud-bottom-center {
+  position: absolute;
+  bottom: 4vh;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sector-dock {
+  background: rgba(10, 10, 26, 0.7);
+  border-radius: 24px;
+  padding: 12px 24px;
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(80, 176, 147, 0.2);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.dock-inner {
+  display: flex;
+  gap: 32px;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 12px 20px;
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.dock-item:hover {
+  background: rgba(80, 176, 147, 0.1);
+}
+
+.dock-item.active {
+  background: rgba(254, 217, 146, 0.1);
+}
+
+.dock-icon {
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.dock-label {
+  font-family: 'JetBrains Mono', 'Inter', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #8899aa;
+  transition: color 0.3s ease;
+}
+
+.dock-item.active .dock-label {
+  color: #fed992;
+}
+
+/* === Responsive === */
+@media (max-width: 768px) {
+  .hud-container {
+    padding: 2vh 4vw;
+  }
+
+  .hud-top-left,
+  .hud-top-right {
+    display: none;
+  }
+
+  .hud-bottom-center {
+    bottom: 3vh;
+  }
+
+  .dock-inner {
+    gap: 16px;
+  }
+
+  .dock-item {
+    padding: 10px 14px;
+  }
+
+  .dock-icon {
+    font-size: 20px;
+  }
+
+  .dock-label {
+    font-size: 9px;
+  }
+}

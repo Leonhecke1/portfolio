@@ -1,0 +1,422 @@
+/* HUD - Clean, Spacious "Space Mission Control" Layout */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --color-deep-space: #0a0a1a;
+  --color-teal: #50b093;
+  --color-turquoise: #2199a2;
+  --color-sand-gold: #fed992;
+  --color-dark-blue: #2b577a;
+  --color-muted-purple: #3b2f5a;
+  --color-text-primary: #e8e8e8;
+  --color-text-secondary: #8899aa;
+  --color-panel-bg: rgba(10, 10, 26, 0.6);
+  --color-panel-border: rgba(80, 176, 147, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ── Main HUD Container ── */
+.hud-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+  padding: 12vh 10vw;
+}
+
+/* Only dock buttons are interactive */
+.hud-container .dock-item {
+  pointer-events: auto;
+}
+
+.hud-container.warping {
+  animation: warp-pulse 0.6s ease-out;
+}
+
+@keyframes warp-pulse {
+  0% { filter: blur(0px); }
+  50% { filter: blur(3px) brightness(1.2); }
+  100% { filter: blur(0px); }
+}
+
+/* ── Corner Accents ── */
+.corner-accent {
+  position: absolute;
+  width: 8vw;
+  height: 8vh;
+  pointer-events: none;
+  opacity: 0.3;
+  transition: opacity 0.5s ease;
+}
+
+.corner-accent svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 6px var(--color-teal));
+}
+
+.corner-tl { top: 2vh; left: 2vw; }
+.corner-tr { top: 2vh; right: 2vw; }
+.corner-bl { bottom: 2vh; left: 2vw; }
+.corner-br { bottom: 2vh; right: 2vw; }
+
+/* ── Top Left — System Status ── */
+.hud-top-left {
+  position: absolute;
+  top: 12vh;
+  left: 10vw;
+}
+
+.system-status-floating {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px;
+  background: var(--color-panel-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: none;
+  border-left: 2px solid var(--color-teal);
+  border-top: 2px solid var(--color-teal);
+  border-radius: 0;
+  position: relative;
+}
+
+.status-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--color-teal); }
+  50% { opacity: 0.5; box-shadow: 0 0 2px var(--color-teal); }
+}
+
+.status-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-teal);
+}
+
+.status-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  letter-spacing: 0.1em;
+}
+
+.status-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+}
+
+/* ── Top Center — Mission Clock ── */
+.hud-top-center {
+  position: absolute;
+  top: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.clock-floating {
+  padding: 14px 32px;
+  background: var(--color-panel-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: none;
+  border-bottom: 1px solid var(--color-panel-border);
+  border-radius: 0 0 12px 12px;
+}
+
+.clock-time {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 22px;
+  font-weight: 300;
+  color: var(--color-text-primary);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 20px rgba(254, 217, 146, 0.15);
+}
+
+/* ── Top Right — Mission Log ── */
+.hud-top-right {
+  position: absolute;
+  top: 12vh;
+  right: 10vw;
+  max-width: 18vw;
+}
+
+.mission-log-floating {
+  padding: 20px 24px;
+  background: var(--color-panel-bg);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: none;
+  border-right: 2px solid var(--color-teal);
+  border-top: 2px solid var(--color-teal);
+  border-radius: 0;
+  min-height: 80px;
+  position: relative;
+}
+
+.log-terminal {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  line-height: 2;
+  letter-spacing: 0.1em;
+}
+
+.log-line {
+  color: var(--color-text-secondary);
+}
+
+.log-cursor {
+  color: var(--color-sand-gold);
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ── Bottom Center — Floating Island Dock ── */
+.hud-bottom-center {
+  position: absolute;
+  bottom: 12vh;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.sector-dock {
+  display: flex;
+  align-items: center;
+  padding: 16px 36px;
+  background: rgba(10, 10, 26, 0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(80, 176, 147, 0.2);
+  border-radius: 60px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(80, 176, 147, 0.1),
+    0 0 100px rgba(254, 217, 146, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  pointer-events: auto;
+}
+
+.dock-inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 14px 24px;
+  border-radius: 16px;
+  transition: background 0.3s ease;
+  position: relative;
+}
+
+.dock-item:hover {
+  background: rgba(80, 176, 147, 0.08);
+}
+
+.dock-item.active {
+  background: rgba(254, 217, 146, 0.12);
+  box-shadow:
+    0 0 20px rgba(254, 217, 146, 0.3),
+    0 0 40px rgba(254, 217, 146, 0.15),
+    inset 0 0 20px rgba(254, 217, 146, 0.05);
+}
+
+.dock-item.active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--color-sand-gold);
+  box-shadow:
+    0 0 12px var(--color-sand-gold),
+    0 0 24px rgba(254, 217, 146, 0.4);
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+@keyframes pulse-gold {
+  0%, 100% {
+    opacity: 1;
+    box-shadow:
+      0 0 12px var(--color-sand-gold),
+      0 0 24px rgba(254, 217, 146, 0.4);
+  }
+  50% {
+    opacity: 0.7;
+    box-shadow:
+      0 0 8px var(--color-sand-gold),
+      0 0 16px rgba(254, 217, 146, 0.2);
+  }
+}
+
+.dock-icon {
+  font-size: 24px;
+  transition: all 0.3s ease;
+}
+
+.dock-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  transition: all 0.3s ease;
+}
+
+.dock-item.active .dock-label {
+  color: var(--color-sand-gold);
+}
+
+/* ── Focus / Warp Transitions ── */
+.hud-container.warping .hud-top-left {
+  animation: slide-out-left 0.4s ease-out forwards;
+}
+
+.hud-container.warping .hud-top-center {
+  animation: slide-out-up 0.3s ease-out forwards;
+}
+
+.hud-container.warping .hud-top-right {
+  animation: slide-out-right 0.4s ease-out forwards;
+}
+
+.hud-container.warping .hud-bottom-center {
+  animation: slide-down 0.5s ease-out forwards;
+}
+
+@keyframes slide-out-left {
+  to {
+    opacity: 0.1;
+    transform: translateX(-50px);
+  }
+}
+
+@keyframes slide-out-right {
+  to {
+    opacity: 0.1;
+    transform: translateX(50px);
+  }
+}
+
+@keyframes slide-out-up {
+  to {
+    opacity: 0.1;
+    transform: translateX(-50%) translateY(-50px);
+  }
+}
+
+@keyframes slide-down {
+  to {
+    opacity: 0.1;
+    transform: translateX(-50%) translateY(50px);
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .hud-container {
+    padding: 8vh 6vw;
+  }
+
+  .hud-top-left {
+    top: 8vh;
+    left: 6vw;
+  }
+
+  .hud-top-right {
+    top: 8vh;
+    right: 6vw;
+    max-width: 25vw;
+  }
+
+  .hud-top-center {
+    top: 8vh;
+  }
+
+  .hud-bottom-center {
+    bottom: 8vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .hud-container {
+    padding: 5vh 5vw;
+  }
+
+  .hud-top-left,
+  .hud-top-right {
+    display: none;
+  }
+
+  .hud-top-center {
+    top: 5vh;
+  }
+
+  .clock-time {
+    font-size: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  .hud-bottom-center {
+    bottom: 6vh;
+  }
+
+  .sector-dock {
+    padding: 2vh 4vw;
+  }
+
+  .dock-inner {
+    gap: 3vw;
+  }
+
+  .dock-item {
+    padding: 1.5vh 3vw;
+  }
+
+  .dock-icon {
+    font-size: 20px;
+  }
+
+  .dock-label {
+    font-size: 8px;
+  }
+}

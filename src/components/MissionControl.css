@@ -1,0 +1,305 @@
+/* Mission Control - Main Wrapper */
+
+.mission-control {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: #0a0a1a;
+  overflow: hidden;
+}
+
+.canvas-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.canvas-wrapper canvas {
+  pointer-events: none;
+}
+
+/* ── Sector Content Panel — Floating Holographic Tablet ── */
+.sector-content {
+  position: absolute;
+  bottom: 20vh;
+  left: 20%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 600px;
+  z-index: 50;
+  pointer-events: none;
+  transition: left 0.6s ease-in-out;
+}
+
+.sector-content > * {
+  pointer-events: auto;
+}
+
+/* Center content panel on home sector */
+.mission-control[data-sector="home"] .sector-content {
+  left: 50%;
+}
+
+.content-panel {
+  background: rgba(10, 10, 26, 0.75);
+  backdrop-filter: blur(60px) saturate(150%);
+  -webkit-backdrop-filter: blur(60px) saturate(150%);
+  border: none;
+  border-top: 2px solid rgba(80, 176, 147, 0.2);
+  border-left: 2px solid rgba(80, 176, 147, 0.2);
+  border-radius: 0;
+  overflow: hidden;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(80, 176, 147, 0.08),
+    0 0 120px rgba(10, 10, 26, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  pointer-events: auto;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 24px;
+  background: rgba(80, 176, 147, 0.04);
+  border-bottom: 1px solid rgba(80, 176, 147, 0.08);
+}
+
+.panel-icon {
+  font-size: 16px;
+  color: #50b093;
+  text-shadow: 0 0 12px rgba(80, 176, 147, 0.5);
+}
+
+.panel-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #50b093;
+  letter-spacing: 0.1em;
+  font-weight: 500;
+}
+
+.panel-body {
+  padding: 28px 32px;
+}
+
+.content-title {
+  font-family: 'Inter', 'JetBrains Mono', monospace;
+  font-size: 26px;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin: 0 0 14px 0;
+  letter-spacing: 1px;
+  text-shadow: 0 0 30px rgba(254, 217, 146, 0.1);
+}
+
+.content-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  color: #8899aa;
+  line-height: 1.8;
+  letter-spacing: 0.3px;
+  margin: 0 0 24px 0;
+}
+
+/* ── Projects Grid ── */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.project-card {
+  background: rgba(80, 176, 147, 0.04);
+  border: none;
+  border-top: 1px solid rgba(80, 176, 147, 0.15);
+  border-left: 1px solid rgba(80, 176, 147, 0.15);
+  border-radius: 0;
+  padding: 20px;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.project-card:hover {
+  background: rgba(80, 176, 147, 0.08);
+  border-top-color: rgba(80, 176, 147, 0.3);
+  border-left-color: rgba(80, 176, 147, 0.3);
+  transform: translateY(-5px) translateX(3px);
+  box-shadow:
+    0 12px 32px rgba(80, 176, 147, 0.15),
+    0 0 40px rgba(80, 176, 147, 0.05);
+}
+
+.project-icon {
+  font-size: 22px;
+  color: #2199a2;
+  margin-bottom: 14px;
+  text-shadow: 0 0 10px rgba(33, 153, 162, 0.4);
+}
+
+.project-card h3 {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #e8e8e8;
+  margin: 0 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+.project-card p {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  color: #8899aa;
+  line-height: 1.6;
+  margin: 0 0 14px 0;
+}
+
+.project-tech {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.project-tech span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  color: #50b093;
+  background: rgba(80, 176, 147, 0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(80, 176, 147, 0.15);
+  letter-spacing: 0.1em;
+}
+
+/* ── Contact Form ── */
+.contact-form {
+  margin-top: 24px;
+}
+
+.form-group {
+  margin-bottom: 18px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 18px;
+  background: rgba(10, 10, 26, 0.6);
+  border: 1px solid rgba(80, 176, 147, 0.12);
+  border-radius: 8px;
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: #e8e8e8;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  pointer-events: auto;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(80, 176, 147, 0.4);
+  box-shadow: 0 0 20px rgba(80, 176, 147, 0.08);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: rgba(136, 153, 170, 0.5);
+  letter-spacing: 1px;
+  font-size: 11px;
+}
+
+.transmit-btn {
+  width: 100%;
+  padding: 16px 28px;
+  background: rgba(80, 176, 147, 0.08);
+  border: 1px solid rgba(80, 176, 147, 0.2);
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #50b093;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.4s ease;
+  pointer-events: auto;
+}
+
+.transmit-btn:hover {
+  background: rgba(80, 176, 147, 0.15);
+  border-color: rgba(80, 176, 147, 0.4);
+  box-shadow:
+    0 0 40px rgba(80, 176, 147, 0.15),
+    0 0 60px rgba(80, 176, 147, 0.08);
+  transform: translateY(-3px);
+  color: #fed992;
+}
+
+/* ── Loading Fallback ── */
+.loading-fallback {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(80, 176, 147, 0.15);
+  border-top-color: #50b093;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-fallback span {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: #50b093;
+  letter-spacing: 0.1em;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .sector-content {
+    bottom: 16vh;
+    width: 92%;
+  }
+
+  .panel-body {
+    padding: 3vh 4vw;
+  }
+
+  .content-title {
+    font-size: 20px;
+  }
+
+  .content-description {
+    font-size: 13px;
+  }
+
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
