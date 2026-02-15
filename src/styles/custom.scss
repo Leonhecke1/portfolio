@@ -1,25 +1,74 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 // src/styles/custom.scss
 
 
-// Customizations for a spacy/futuristic theme
+// Customizations for a professional space/futuristic theme
 
-// Theme Colors
-$dark: #3D3132;    // Dark Charcoal Brown
-$light: #F7EFE0;   // Creamy Off-white
+// ============================================
+// DESIGN SYSTEM - FOUNDATION
+// ============================================
 
-// Core Retro Palette
-$warm-orange: #E07A5F; // Terracotta Orange
-$dark-orange: #B05B4A; // Darker Terracotta
-$soft-light-orange: #F2CC8F; // Muted Light Yellow/Orange
+// BASE COLORS (Deeper, more professional)
+$dark: #1a1625;           // Deep space black (darker, more sophisticated)
+$dark-elevated: #252033;  // Elevated surfaces
+$light: #f0f0f3;          // Softer white (reduced glare)
 
-// Assigning palette colors to main theme variables
-$primary: $warm-orange;    // Primary warm orange
-$secondary: $dark-orange;  // Secondary darker orange
+// ORANGE PALETTE (Refined hierarchy)
+$primary-orange: #E07A5F;       // Main orange (terracotta)
+$primary-orange-light: #f29479; // Light orange for highlights
+$primary-orange-dark: #B05B4A;  // Dark orange for depth
 
-// We will explicitly use $light for text on dark backgrounds and $dark for text on light backgrounds.
-// Other accent colors from previous palette are removed for simplicity and adherence to new theme.
+// NEUTRALS (Better contrast and hierarchy)
+$gray-200: #e0e0e5;
+$gray-300: #c0c0c8;
+$gray-400: #9090a0;
+$gray-500: #606070;
+
+// Legacy variable mapping (for compatibility)
+$warm-orange: $primary-orange;
+$dark-orange: $primary-orange-dark;
+$soft-light-orange: #F2CC8F; // Kept for specific accent use
+$primary: $primary-orange;
+$secondary: $primary-orange-dark;
+
+// TYPOGRAPHY SYSTEM
+$font-heading: 'Space Grotesk', sans-serif;  // Modern, space-themed
+$font-body: 'Inter', sans-serif;             // Professional body text
+$font-mono: 'Consolas', 'Monaco', monospace; // Code/monospace
+
+// Type Scale (1.25 ratio - harmonious hierarchy)
+$text-xs: 0.75rem;    // 12px
+$text-sm: 0.875rem;   // 14px
+$text-base: 1rem;     // 16px
+$text-lg: 1.125rem;   // 18px
+$text-xl: 1.25rem;    // 20px
+$text-2xl: 1.5rem;    // 24px
+$text-3xl: 1.875rem;  // 30px
+$text-4xl: 2.25rem;   // 36px
+$text-5xl: 3rem;      // 48px
+$text-6xl: 3.75rem;   // 60px
+
+// SPACING SYSTEM (8px base unit)
+$space-1: 0.25rem;  // 4px
+$space-2: 0.5rem;   // 8px
+$space-3: 0.75rem;  // 12px
+$space-4: 1rem;     // 16px
+$space-5: 1.25rem;  // 20px
+$space-6: 1.5rem;   // 24px
+$space-8: 2rem;     // 32px
+$space-10: 2.5rem;  // 40px
+$space-12: 3rem;    // 48px
+$space-16: 4rem;    // 64px
+$space-20: 5rem;    // 80px
+
+// BREAKPOINTS (Comprehensive responsive system)
+$breakpoint-xs: 480px;    // Small mobile
+$breakpoint-sm: 640px;    // Mobile
+$breakpoint-md: 768px;    // Tablet portrait
+$breakpoint-lg: 1024px;   // Tablet landscape
+$breakpoint-xl: 1280px;   // Desktop
+$breakpoint-2xl: 1536px;  // Large desktop
 
 @import './stars';
 
@@ -30,7 +79,9 @@ body {
   scrollbar-width: unset !important; // Hide scrollbar for Firefox
   margin: 0;
   color: $light;
-  font-family: 'Roboto Mono', monospace; // Retro monospace font
+  font-family: $font-body; // Professional Inter font
+  font-size: $text-base;
+  line-height: 1.6;
   min-height: 100vh;
  // background-color: $dark;
   background-size: cover;
@@ -58,23 +109,16 @@ body {
   width: 100vw;
   height: 100vh;
   z-index: -1.5; /* Between stars (-1) and body::after (-2) */
-  opacity: 0.15; /* Subtle and translucent */
+  opacity: 0.12; /* More subtle */
   pointer-events: none; /* Ensure it doesn't block interactions */
-  animation: subtleZoomPan 60s linear infinite alternate;
+  transform: scale(1.05); /* Static, subtle scale for depth */
 
   path {
-    fill: $dark-orange;
+    fill: $primary-orange-dark;
   }
 }
 
-@keyframes subtleZoomPan {
-  0% {
-    transform: scale(1) translate(0, 0);
-  }
-  100% {
-    transform: scale(1.1) translate(5vw, 5vh);
-  }
-}
+// REMOVED: subtleZoomPan animation (60s was imperceptible, static scale is cleaner)
 
 @keyframes gradientBG {
   0% {
@@ -93,11 +137,32 @@ body {
   color: $light;
 }
 
-// Global Section Container
+// Global Section Container (Progressive max-widths)
 .section-container {
-  max-width: 1000px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 $space-6; // 24px default
+
+  @media (min-width: $breakpoint-sm) {
+    max-width: 640px;
+  }
+
+  @media (min-width: $breakpoint-md) {
+    max-width: 768px;
+  }
+
+  @media (min-width: $breakpoint-lg) {
+    max-width: 1024px;
+    padding: 0 $space-8; // 32px on tablet landscape+
+  }
+
+  @media (min-width: $breakpoint-xl) {
+    max-width: 1280px;
+  }
+
+  @media (min-width: $breakpoint-2xl) {
+    max-width: 1536px;
+  }
 
   @media (max-width: 480px) {
     padding: 0 1rem;
@@ -361,23 +426,28 @@ body {
   }
 
   .hero-title {
-    font-family: 'Press Start 2P', cursive; // Retro arcade font
-    font-size: 4.5rem;
-    margin-bottom: 1rem;
-    color: $primary;
+    font-family: $font-heading;
+    font-size: $text-6xl; // 60px (3.75rem)
+    font-weight: 700;
+    margin-bottom: $space-4;
+    background: linear-gradient(135deg, $light, $primary-orange-light);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 
-    @media (max-width: 768px) {
-      font-size: 3.5rem;
+    @media (max-width: $breakpoint-md) {
+      font-size: $text-5xl; // 48px (3rem)
     }
 
-    @media (max-width: 480px) {
-      font-size: 2.5rem;
+    @media (max-width: $breakpoint-xs) {
+      font-size: $text-4xl; // 36px (2.25rem)
     }
   }
 
   .hero-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
+    font-size: $text-xl; // 20px (1.25rem)
+    font-weight: 400;
+    margin-bottom: $space-8;
     color: $light;
 
     @media (max-width: 768px) {
@@ -418,76 +488,104 @@ body {
   }
 }
 
-// Buttons
+// Buttons (Touch-friendly with 44px minimum)
 .btn-custom {
-  background-color: $primary;
-  border: 1px solid $primary;
-  padding: 0.8rem 2rem;
+  background-color: $primary-orange;
+  border: 1px solid $primary-orange;
+  padding: $space-3 $space-8; // 12px 32px
+  min-height: 44px; // Touch-friendly minimum
+  min-width: 44px;
   border-radius: 5px;
   color: $dark;
-  font-weight: bold;
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: $text-base; // 16px
   text-decoration: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
-  display: inline-block; // For proper padding and margin
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 
   &:hover {
     background-color: transparent;
-    color: $primary;
-    box-shadow: 0 0 20px rgba($primary, 0.9); // More pronounced glow on hover
-    transform: translateY(-3px) scale(1.02); // Add a subtle lift and scale
+    color: $primary-orange;
+    box-shadow: 0 4px 12px rgba($primary-orange, 0.3); // Refined glow (less intense)
+    transform: translateY(-2px); // Subtle lift
   }
 
   &:disabled {
-    background-color: lighten($primary, 15%); // Lighter primary color
-    border-color: lighten($primary, 15%);
-    color: rgba($dark, 0.6); // Lighter dark color
+    background-color: lighten($primary-orange, 15%);
+    border-color: lighten($primary-orange, 15%);
+    color: rgba($dark, 0.6);
     cursor: not-allowed;
     box-shadow: none;
-    transform: none; // Remove hover effects for disabled state
-    opacity: 0.7; // Slightly faded
+    transform: none;
+    opacity: 0.7;
   }
 }
 
 .btn-accent {
   background-color: $soft-light-orange;
   border: 1px solid $soft-light-orange;
-  padding: 0.8rem 2rem;
+  padding: $space-3 $space-8; // 12px 32px
+  min-height: 44px; // Touch-friendly minimum
+  min-width: 44px;
   border-radius: 5px;
   color: $dark;
-  font-weight: bold;
+  font-family: $font-body;
+  font-weight: 600;
+  font-size: $text-base;
   text-decoration: none;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Add transform to transition */
-  display: inline-block; // For proper padding and margin
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 
   &:hover {
     background-color: transparent;
     color: $soft-light-orange;
-    box-shadow: 0 0 20px rgba($soft-light-orange, 0.9); // More pronounced glow on hover
-    transform: translateY(-3px) scale(1.02); // Add a subtle lift and scale
+    box-shadow: 0 4px 12px rgba($soft-light-orange, 0.3); // Refined glow (less intense)
+    transform: translateY(-2px); // Subtle lift
   }
 }
 
 
-// General Section Styling
+// General Section Styling (Responsive padding)
 section {
-  padding: 4rem 0;
+  padding: $space-20 0; // 80px desktop
   position: relative;
   z-index: 1; // Ensure content is above background effects
+
+  @media (max-width: $breakpoint-lg) {
+    padding: $space-16 0; // 64px tablet landscape
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: $space-12 0; // 48px mobile
+  }
+
+  @media (max-width: $breakpoint-xs) {
+    padding: $space-10 0; // 40px small mobile
+  }
 }
 
 .section-title {
   text-align: center;
-  margin-bottom: 3rem;
-  font-size: 2.5rem;
-  color: $primary;
+  margin-bottom: $space-12; // 48px
+  font-family: $font-heading;
+  font-size: $text-4xl; // 36px (2.25rem)
+  font-weight: 600;
+  color: $primary-orange;
   position: relative;
 
-  @media (max-width: 768px) {
-    font-size: 2rem;
+  @media (max-width: $breakpoint-md) {
+    font-size: $text-3xl; // 30px (1.875rem)
   }
 
-  @media (max-width: 480px) {
-    font-size: 1.8rem;
+  @media (max-width: $breakpoint-xs) {
+    font-size: $text-2xl; // 24px (1.5rem)
   }
 
 
@@ -543,9 +641,8 @@ section {
     background-color: rgba($dark, 0.9); // Semi-transparent background for readability
     padding: 2rem;
     border-radius: 10px;
-    box-shadow: 0 0 15px rgba($primary, 0.2); // Softened glow
+    box-shadow: 0 2px 8px rgba(black, 0.15); // Subtle depth shadow (removed glow animation)
     backdrop-filter: blur(5px);
-    animation: containerGlow 4s ease-in-out infinite alternate;
   }
 
   .section-title {
@@ -652,12 +749,27 @@ section {
   .constellation-map {
     position: relative;
     width: 100%;
-    height: 500px; // Adjust height as needed
-    margin: 3rem auto;
-    border: 1px solid rgba($primary, 0.2);
+    aspect-ratio: 2 / 1; // Responsive height based on width
+    min-height: 300px;
+    max-height: 600px;
+    margin: $space-12 auto;
+    border: 1px solid rgba($primary-orange, 0.2);
     border-radius: 10px;
     background: rgba($dark, 0.3);
     backdrop-filter: blur(2px);
+
+    @media (max-width: $breakpoint-lg) {
+      aspect-ratio: 16 / 10; // Taller on tablet landscape
+    }
+
+    @media (max-width: $breakpoint-md) {
+      aspect-ratio: 4 / 3; // Even taller on tablet portrait
+    }
+
+    @media (max-width: $breakpoint-xs) {
+      aspect-ratio: 1 / 1; // Square on mobile
+      min-height: 250px;
+    }
   }
 
   .instruction-overlay {
@@ -678,7 +790,7 @@ section {
     border-radius: 10px;
 
     p {
-      font-family: 'Press Start 2P', cursive;
+      font-family: $font-heading;
       color: $primary;
       font-size: 1.5rem;
       text-align: center;
@@ -708,16 +820,18 @@ section {
 
   .project-star {
     position: absolute;
-    width: 12px;
-    height: 12px;
+    width: 20px; // Increased from 12px for better visibility
+    height: 20px;
+    padding: $space-3; // 12px padding = 44px total tap area (touch-friendly)
     background-color: $light;
+    background-clip: content-box; // Keep visual dot at 20px
     border-radius: 50%;
     cursor: pointer;
     transition: transform 0.3s ease, background-color 0.3s ease;
 
     &:hover {
-      background-color: $primary;
-      transform: scale(1.8);
+      background-color: $primary-orange;
+      transform: scale(1.5); // Reduced from 1.8 since dot is already larger
       .star-label {
         opacity: 1;
         transform: translate(15px, -50%);
@@ -732,11 +846,15 @@ section {
     transform: translate(-50%, -50%);
     width: 200%;
     height: 200%;
-    background-color: $primary;
+    background-color: $primary-orange;
     border-radius: 50%;
-    opacity: 0.5;
+    opacity: 0.3; // Static, subtle glow
     filter: blur(10px);
-    animation: twinkle 4s ease-in-out infinite alternate; // Changed animation
+    transition: opacity 0.3s ease;
+  }
+
+  &:hover .star-glow {
+    opacity: 0.7; // Glow only on hover (removed constant animation)
   }
 
   .star-label {
@@ -768,6 +886,17 @@ section {
   }
 }
 
+// CRITICAL FIX: Missing animation definition (was causing failures on lines 687, 1666)
+@keyframes text-subtle-glow {
+  0% {
+    text-shadow: 0 0 10px rgba($primary-orange, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 15px rgba($primary-orange, 0.8),
+                 0 0 20px rgba($primary-orange, 0.4);
+  }
+}
+
 // Project Detail Page
 .project-detail-container {
   max-width: 800px;
@@ -780,7 +909,7 @@ section {
   animation: modalFadeIn 0.5s ease-out;
 
   .project-detail-title {
-    font-family: 'Press Start 2P', cursive;
+    font-family: $font-heading;
     font-size: 2.5rem;
     color: $primary;
     text-align: center;
@@ -841,7 +970,7 @@ section {
   animation: modalFadeIn 0.5s ease-out;
 
   .project-detail-title {
-    font-family: 'Press Start 2P', cursive;
+    font-family: $font-heading;
     font-size: 2.5rem;
     color: $primary;
     text-align: center;
@@ -928,11 +1057,10 @@ section {
     margin: 2rem auto;
     padding: 2rem;
     background-color: transparent;
-    border: 1px solid rgba($primary, 0.5);
+    border: 1px solid rgba($primary-orange, 0.25);
     border-radius: 8px;
-    box-shadow: 0 0 15px rgba($primary, 0.2); // Softened glow
+    box-shadow: 0 2px 8px rgba(black, 0.15); // Subtle depth shadow (removed glow animation)
     backdrop-filter: blur(10px);
-    animation: containerGlow 4s ease-in-out infinite alternate;
 
     .form-group {
       margin-bottom: 1.5rem;
@@ -973,12 +1101,11 @@ section {
 .custom-card {
   background-color: rgba($dark, 0.9); // Darker card background
   border: 1px solid rgba($primary, 0.5); // Border with primary accent
-  box-shadow: 0 0 10px rgba($primary, 0.15); // Softened glow
+  box-shadow: 0 2px 8px rgba(black, 0.15); // Subtle depth shadow (removed glow animation)
   padding: 1.5rem;
   border-radius: 8px;
   text-align: center;
   backdrop-filter: blur(5px);
-  animation: containerGlow 4s ease-in-out infinite alternate;
 }
 
 // Footer Styling
@@ -1008,10 +1135,9 @@ section {
 .svg-separator {
   width: 100%;
   line-height: 0;
-  color: $primary; // Use primary color for the SVG fill
+  color: $primary-orange; // Use primary color for the SVG fill
   margin: 2rem 0; // Space above and below separator
-  filter: drop-shadow(0 0 6px rgba($primary, 0.7)); // Softened intense glow
-  animation: glowPulse 2s infinite alternate; // Add pulsation animation
+  filter: drop-shadow(0 2px 4px rgba($primary-orange, 0.3)); // Static subtle shadow (removed glow animation)
 
   svg {
     display: block;
@@ -1025,14 +1151,7 @@ section {
   }
 }
 
-@keyframes glowPulse {
-  0% {
-    filter: drop-shadow(0 0 6px rgba($primary, 0.7));
-  }
-  100% {
-    filter: drop-shadow(0 0 12px rgba($primary, 0.9)); // Softened intense glow
-  }
-}
+// REMOVED: glowPulse animation (excessive, replaced with static shadow)
 
 // Side Navigation
 .side-nav {
@@ -1059,10 +1178,12 @@ section {
 
   a {
     display: block;
-    width: 12px;
-    height: 12px;
+    width: 16px; // Increased from 12px for better visibility
+    height: 16px;
+    padding: $space-4; // 16px padding = 48px total tap area (touch-friendly)
     border-radius: 50%;
     background-color: rgba($light, 0.5);
+    background-clip: content-box; // Keep visual dot at 16px
     transition: all 0.3s ease;
     position: relative;
 
@@ -1098,11 +1219,7 @@ section {
   }
 }
 
-@keyframes containerGlow {
-  0% { box-shadow: 0 0 3px rgba($primary, 0.1), inset 0 0 1px rgba($primary, 0.02); } // Even more subtle
-  50% { box-shadow: 0 0 8px rgba($soft-light-orange, 0.2), inset 0 0 3px rgba($soft-light-orange, 0.08); } // Less intense
-  100% { box-shadow: 0 0 3px rgba($primary, 0.1), inset 0 0 1px rgba($primary, 0.02); } // Even more subtle
-}
+// REMOVED: containerGlow animation (excessive, replaced with static shadow)
 
 
 @keyframes timelinePulse {
@@ -1265,8 +1382,20 @@ section {
 
 /* Planetary Dashboard Specific Styles */
 .planetary-dashboard-section {
-  padding: 4rem 0;
+  padding: $space-20 0; // Consistent with other sections
   text-align: center;
+
+  @media (max-width: $breakpoint-lg) {
+    padding: $space-16 0;
+  }
+
+  @media (max-width: $breakpoint-md) {
+    padding: $space-12 0;
+  }
+
+  @media (max-width: $breakpoint-xs) {
+    padding: $space-10 0;
+  }
 }
 
 .dashboard-controls {
@@ -1331,8 +1460,17 @@ section {
 .planet-cards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: $space-8; // 32px
+  margin-top: $space-8;
+
+  @media (max-width: $breakpoint-md) {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); // Smaller cards on tablet
+  }
+
+  @media (max-width: $breakpoint-xs) {
+    grid-template-columns: 1fr; // Single column on mobile (prevents overflow)
+    gap: $space-6; // 24px
+  }
 }
 
 .planet-card {
@@ -1376,7 +1514,7 @@ section {
 
 
   h3 {
-    font-family: 'Press Start 2P', cursive;
+    font-family: $font-heading;
     font-size: 1.5rem;
     color: $soft-light-orange;
     margin-top: 0;
@@ -1518,7 +1656,7 @@ section {
   color: $light;
 
   h2 {
-    font-family: 'Press Start 2P', cursive;
+    font-family: $font-heading;
     color: $primary;
     text-align: center;
     margin-bottom: 1rem;
@@ -1741,7 +1879,7 @@ section {
 
   /* Edit Connection Button */
   .edit-connection-button {
-    background-color: $primary;
+    background-color: $primary-orange;
     color: $dark;
     border: none;
     border-radius: 50%;
@@ -1753,13 +1891,37 @@ section {
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 10px rgba($primary, 0.6);
+    box-shadow: 0 0 10px rgba($primary-orange, 0.6);
     transition: transform 0.2s ease, background-color 0.2s ease;
 
     &:hover {
       transform: scale(1.2);
-      background-color: lighten($primary, 10%);
+      background-color: lighten($primary-orange, 10%);
     }
+  }
+}
+
+// ============================================
+// ACCESSIBILITY - REDUCED MOTION
+// ============================================
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  // Specifically disable background animations
+  .stars .star,
+  .galaxy-background,
+  .hero-astronaut-img,
+  .about-globe-img,
+  .contact-satellite-img,
+  .constellation-lines {
+    animation: none !important;
   }
 }
 

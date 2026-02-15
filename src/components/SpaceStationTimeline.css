@@ -156,9 +156,39 @@
 }
 
 /* Media queries for responsiveness */
+
+/* Tablet Landscape (1024px and below) - Keep two-column layout with adjustments */
+@media screen and (max-width: 1024px) and (min-width: 769px) {
+  .timeline {
+    max-width: 900px;
+  }
+
+  .timeline::after {
+    left: 50%; /* Keep centered line */
+  }
+
+  .timeline-item {
+    width: 50%; /* Keep two-column layout */
+    padding: 10px 30px; /* Slightly reduce padding */
+  }
+
+  .timeline-item.left {
+    padding-right: 70px; /* Reduce spacing */
+  }
+
+  .timeline-item.right {
+    padding-left: 70px; /* Reduce spacing */
+  }
+
+  .timeline-content {
+    padding: 16px 24px; /* Slightly reduce content padding */
+  }
+}
+
+/* Tablet Portrait and Mobile (768px and below) - Single column layout */
 @media screen and (max-width: 768px) {
   .timeline::after {
-    left: 31px;
+    left: 31px; /* Move line to left side */
   }
 
   .timeline-item {
@@ -170,7 +200,7 @@
   .timeline-item.left {
     transform: translateX(0); /* Ensure left items start on screen */
   }
-  
+
   .timeline-item.right {
     left: 0%; /* Stack on the left side of the single line */
     padding-inline: 0;
@@ -179,7 +209,7 @@
 
   .timeline-item.left::after,
   .timeline-item.right::after {
-    left: 15px;
+    left: 15px; /* Position markers on left */
   }
 
   .timeline-content {
