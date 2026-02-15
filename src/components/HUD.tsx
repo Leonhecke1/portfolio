@@ -100,7 +100,7 @@ const MissionLog: React.FC = () => {
 
 // Floating Island Dock - Bottom Center with magnetic hover
 const SectorDock: React.FC = () => {
-  const { activeSector, setActiveSector, setWarpFactor, isFocused, setIsFocused } = useTheme();
+  const { activeSector, setActiveSector, isFocused, setIsFocused } = useTheme();
 
   const sectors = [
     { id: 'home', label: 'Home', icon: '◈' },
@@ -110,14 +110,19 @@ const SectorDock: React.FC = () => {
   ];
 
   const handleSectorChange = (sectorId: string) => {
-    if (sectorId !== activeSector) {
+    if (sectorId !== activeSector && !isFocused) {
+      // Phase 1: Start transition (0ms)
       setIsFocused(true);
-      setWarpFactor(1);
-      setTimeout(() => setWarpFactor(0), 600);
+
+      // Phase 2: Change sector midway through (750ms)
       setTimeout(() => {
         setActiveSector(sectorId);
+      }, 750);
+
+      // Phase 3: End transition (1500ms)
+      setTimeout(() => {
         setIsFocused(false);
-      }, 300);
+      }, 1500);
     }
   };
 
@@ -129,7 +134,7 @@ const SectorDock: React.FC = () => {
         y: isFocused ? 50 : 0,
         opacity: isFocused ? 0.1 : 1,
       }}
-      transition={{ duration: 0.5, ease: 'easeInOut' }}
+      transition={{ duration: 0.8, ease: 'easeInOut' }}
     >
       <div className="dock-inner">
         {sectors.map((sector) => (
@@ -227,7 +232,7 @@ const HUD: React.FC = () => {
           <motion.div
             className="hud-top-left"
             animate={{ opacity: isFocused ? 0.1 : 1, x: isFocused ? -50 : 0 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
           >
             <SystemStatus />
           </motion.div>
@@ -236,7 +241,7 @@ const HUD: React.FC = () => {
           <motion.div
             className="hud-top-center"
             animate={{ opacity: isFocused ? 0.1 : 1, y: isFocused ? -50 : 0 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
           >
             <MissionClock />
           </motion.div>
@@ -245,7 +250,7 @@ const HUD: React.FC = () => {
           <motion.div
             className="hud-top-right"
             animate={{ opacity: isFocused ? 0.1 : 1, x: isFocused ? 50 : 0 }}
-            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            transition={{ duration: 0.8, ease: 'easeInOut' }}
           >
             <MissionLog />
           </motion.div>

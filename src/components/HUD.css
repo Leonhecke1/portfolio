@@ -36,15 +36,7 @@
   pointer-events: auto;
 }
 
-.hud-container.warping {
-  animation: warp-pulse 0.6s ease-out;
-}
-
-@keyframes warp-pulse {
-  0% { filter: blur(0px); }
-  50% { filter: blur(3px) brightness(1.2); }
-  100% { filter: blur(0px); }
-}
+/* Warp animation removed - using smooth transitions instead */
 
 /* ── Corner Accents ── */
 .corner-accent {
@@ -306,50 +298,8 @@
   color: var(--color-sand-gold);
 }
 
-/* ── Focus / Warp Transitions ── */
-.hud-container.warping .hud-top-left {
-  animation: slide-out-left 0.4s ease-out forwards;
-}
-
-.hud-container.warping .hud-top-center {
-  animation: slide-out-up 0.3s ease-out forwards;
-}
-
-.hud-container.warping .hud-top-right {
-  animation: slide-out-right 0.4s ease-out forwards;
-}
-
-.hud-container.warping .hud-bottom-center {
-  animation: slide-down 0.5s ease-out forwards;
-}
-
-@keyframes slide-out-left {
-  to {
-    opacity: 0.1;
-    transform: translateX(-50px);
-  }
-}
-
-@keyframes slide-out-right {
-  to {
-    opacity: 0.1;
-    transform: translateX(50px);
-  }
-}
-
-@keyframes slide-out-up {
-  to {
-    opacity: 0.1;
-    transform: translateX(-50%) translateY(-50px);
-  }
-}
-
-@keyframes slide-down {
-  to {
-    opacity: 0.1;
-    transform: translateX(-50%) translateY(50px);
-  }
-}
+/* ── Transitions ── */
+/* All transitions now handled by framer-motion in HUD.tsx */
 
 /* ── Responsive ── */
 @media (max-width: 1024px) {

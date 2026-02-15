@@ -4,28 +4,17 @@ import { OrbitControls, Stars, Sparkles, Float } from '@react-three/drei';
 import * as THREE from 'three';
 import { useTheme, THEME } from '../contexts/MissionControlContext';
 
-// Enhanced Warp Stars with new palette
-const WarpStars: React.FC<{ warpFactor: number }> = ({ warpFactor }) => {
-  const starsRef = useRef<THREE.Points>(null);
-
-  useFrame((state) => {
-    if (starsRef.current && warpFactor > 0) {
-      const material = starsRef.current.material as THREE.PointsMaterial;
-      material.size = 0.1 + warpFactor * 0.3;
-      (starsRef.current as any).rotation.z = state.clock.elapsedTime * warpFactor * 0.5;
-    }
-  });
-
+// Background stars - simplified without warp effect
+const BackgroundStars: React.FC = () => {
   return (
     <Stars
-      ref={starsRef}
       radius={120}
       depth={80}
-      count={warpFactor > 0 ? 8000 : 5000}
-      factor={warpFactor > 0 ? 8 : 3}
+      count={5000}
+      factor={3}
       saturation={0.1}
       fade
-      speed={0.3 + warpFactor * 3}
+      speed={0.3}
     />
   );
 };
@@ -39,13 +28,15 @@ interface WaypointProps {
   color: string;
   isActive: boolean;
   mousePos?: MousePosition;
+  isFocused: boolean;
 }
 
 const Waypoint: React.FC<WaypointProps> = ({
   position,
   color,
   isActive,
-  mousePos = { x: 0, y: 0 }
+  mousePos = { x: 0, y: 0 },
+  isFocused
 }) => {
   const meshRef = useRef<THREE.Mesh>(null);
   const ringRef = useRef<THREE.Mesh>(null);
@@ -68,12 +59,24 @@ const Waypoint: React.FC<WaypointProps> = ({
       innerRingRef.current.rotation.z -= delta * (isActive ? 2 : 0.6);
     }
 
-    // Enhanced parallax offset
-    if (groupRef.current && !isActive) {
-      const parallaxX = mousePos.x * 0.1;
-      const parallaxY = mousePos.y * 0.1;
+    // Parallax offset - disabled during transitions
+    if (groupRef.current && !isActive && !isFocused) {
+      const parallaxX = mousePos.x * 0.08;
+      const parallaxY = mousePos.y * 0.08;
       groupRef.current.position.x = position[0] + parallaxX;
       groupRef.current.position.y = position[1] + parallaxY;
+    } else if (groupRef.current) {
+      // Smoothly return to exact position
+      groupRef.current.position.x = THREE.MathUtils.lerp(
+        groupRef.current.position.x,
+        position[0],
+        0.05
+      );
+      groupRef.current.position.y = THREE.MathUtils.lerp(
+        groupRef.current.position.y,
+        position[1],
+        0.05
+      );
     }
   });
 
@@ -169,7 +172,10 @@ interface MousePosition {
 }
 
 // Floating nebula particles with enhanced parallax
-const NebulaParticles: React.FC<{ mousePos: MousePosition }> = ({ mousePos }) => {
+const NebulaParticles: React.FC<{
+  mousePos: MousePosition;
+  isFocused: boolean;
+}> = ({ mousePos, isFocused }) => {
   const particlesRef = useRef<THREE.Points>(null);
 
   const { positions, colors } = useMemo(() => {
@@ -204,9 +210,10 @@ const NebulaParticles: React.FC<{ mousePos: MousePosition }> = ({ mousePos }) =>
 
   useFrame((state) => {
     if (particlesRef.current) {
-      // Enhanced parallax with mouse tracking
-      const parallaxX = mousePos.x * 0.3;
-      const parallaxY = mousePos.y * 0.3;
+      // Parallax with mouse tracking - disabled during transitions
+      const parallaxStrength = isFocused ? 0 : 0.2;
+      const parallaxX = mousePos.x * parallaxStrength;
+      const parallaxY = mousePos.y * parallaxStrength;
 
       particlesRef.current.rotation.y = state.clock.elapsedTime * 0.015 + parallaxX;
       particlesRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.01) * 0.05 + parallaxY;
@@ -240,32 +247,32 @@ const NebulaParticles: React.FC<{ mousePos: MousePosition }> = ({ mousePos }) =>
 // Camera Controller with smooth cinematic transitions
 const CameraController: React.FC<{
   targetPosition: [number, number, number];
-  warpFactor: number;
+  isFocused: boolean;
   mousePos: MousePosition;
-}> = ({ targetPosition, warpFactor, mousePos }) => {
+}> = ({ targetPosition, isFocused, mousePos }) => {
   const { camera } = useThree();
   const targetRef = useRef(new THREE.Vector3());
 
   useFrame(() => {
-    // Enhanced 3D parallax on camera - subtle for smooth experience
-    const parallaxStrength = warpFactor > 0 ? 0 : 0.5;
+    // Enhanced 3D parallax on camera - disabled during transitions
+    const parallaxStrength = isFocused ? 0 : 0.3;
     const parallaxX = mousePos.x * parallaxStrength;
     const parallaxY = mousePos.y * parallaxStrength;
 
-    // Smooth cinematic camera movement with easing
-    const lerpSpeed = warpFactor > 0 ? 0.08 : 0.03;
+    // Smooth cinematic camera movement with consistent speed
+    const lerpSpeed = 0.02;
 
     camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetPosition[0] + parallaxX, lerpSpeed);
     camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetPosition[1] + parallaxY, lerpSpeed);
-    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetPosition[2] - warpFactor * 5, lerpSpeed);
+    camera.position.z = THREE.MathUtils.lerp(camera.position.z, targetPosition[2], lerpSpeed);
 
     // Smooth lookAt with interpolation
     targetRef.current.set(targetPosition[0], targetPosition[1], targetPosition[2]);
     camera.lookAt(targetRef.current);
 
-    // Dynamic FOV for cinematic feel
+    // Fixed FOV for stable viewing
     if (camera instanceof THREE.PerspectiveCamera) {
-      const targetFOV = warpFactor > 0 ? 75 : 60;
+      const targetFOV = 60;
       camera.fov = THREE.MathUtils.lerp(camera.fov, targetFOV, 0.05);
       camera.updateProjectionMatrix();
     }
@@ -276,7 +283,7 @@ const CameraController: React.FC<{
 
 // Main Scene
 const StarMap: React.FC = () => {
-  const { activeSector, warpFactor } = useTheme();
+  const { activeSector, isFocused } = useTheme();
   const [mousePos, setMousePos] = useState<MousePosition>({ x: 0, y: 0 });
 
   // Enhanced mouse tracking for immersive parallax
@@ -342,7 +349,7 @@ const StarMap: React.FC = () => {
       <pointLight position={[0, 10, 5]} intensity={0.2} color={THEME.sandGold} />
 
       {/* Deep starfield background */}
-      <WarpStars warpFactor={warpFactor} />
+      <BackgroundStars />
       <Sparkles
         count={250}
         scale={40}
@@ -361,7 +368,7 @@ const StarMap: React.FC = () => {
       />
 
       {/* Nebula particles */}
-      <NebulaParticles mousePos={mousePos} />
+      <NebulaParticles mousePos={mousePos} isFocused={isFocused} />
 
       {/* Connection lines */}
       <ConstellationLines waypoints={waypoints} activeWaypoint={activeSector} />
@@ -377,21 +384,22 @@ const StarMap: React.FC = () => {
           color={waypoint.color}
           isActive={activeSector === waypoint.id}
           mousePos={mousePos}
+          isFocused={isFocused}
         />
       ))}
 
       {/* Camera Controller */}
-      <CameraController targetPosition={cameraTarget} warpFactor={warpFactor} mousePos={mousePos} />
+      <CameraController targetPosition={cameraTarget} isFocused={isFocused} mousePos={mousePos} />
 
       {/* Controls - Smooth cinematic movement only */}
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        enableRotate={activeSector === 'home'}
+        enableRotate={activeSector === 'home' && !isFocused}
         minDistance={3}
         maxDistance={18}
-        autoRotate={activeSector === 'home' && warpFactor === 0}
-        autoRotateSpeed={0.2}
+        autoRotate={activeSector === 'home' && !isFocused}
+        autoRotateSpeed={0.15}
         maxPolarAngle={Math.PI * 0.85}
         minPolarAngle={Math.PI * 0.15}
       />
