@@ -1,103 +1,149 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-const SideNav: React.FC = () => {
-  const [activeSection, setActiveSection] = useState('home');
+interface NavSection {
+  id: string;
+  label: string;
+}
+
+const SECTIONS: NavSection[] = [
+  { id: 'hero',                  label: 'Home'     },
+  { id: 'about',                 label: 'About'    },
+  { id: 'spacestation-timeline', label: 'Career'   },
+  { id: 'projects',              label: 'Projects' },
+  { id: 'lab',                   label: 'Lab'      },
+  { id: 'contact',               label: 'Contact'  },
+];
+
+const SideNav = () => {
+  const [active, setActive] = useState('hero');
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const location = useLocation();
+  const isHome = location.pathname === '/';
+
+  const handleScroll = useCallback(() => {
+    if (!isHome) return;
+    const mid = window.scrollY + window.innerHeight * 0.4;
+    let current = SECTIONS[0].id;
+    for (const { id } of SECTIONS) {
+      const el = document.getElementById(id);
+      if (el && el.offsetTop <= mid) current = id;
+    }
+    setActive(current);
+  }, [isHome]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Only update active section if on the homepage
-      if (location.pathname === '/') {
-        const sections = ['home', 'about', 'spacestation-timeline', 'projects', 'contact'];
-        // Adjust scroll position check to be more forgiving or centered
-        const scrollPosition = window.scrollY + window.innerHeight / 2.5; // Slightly above center
-
-        let currentActive = 'home'; // Default to home if no other section is active
-
-        for (const sectionId of sections) {
-          const section = document.getElementById(sectionId);
-          if (section) {
-            const sectionTop = section.offsetTop;
-            const sectionBottom = sectionTop + section.offsetHeight;
-
-            if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-              currentActive = sectionId;
-              break;
-            }
-          }
-        }
-        setActiveSection(currentActive);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    // Initial check on mount
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [location.pathname]); // Re-run effect if path changes, to reset active state or stop scrolling logic
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
-  const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    if (location.pathname === '/') {
-      e.preventDefault(); // Prevent default Link navigation
-      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-    }
-    // If not on homepage, Link will handle navigation to /#targetId
-    // For robust hash scrolling after navigation, App.tsx would need a useEffect for location.hash
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <nav className="side-nav">
-      <ul>
-        <li>
-          <Link
-            to="/#home"
-            className={activeSection === 'home' ? 'active' : ''}
-            onClick={(e) => handleNavLinkClick(e, 'home')}
-          >
-            <span>Home</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/#about"
-            className={activeSection === 'about' ? 'active' : ''}
-            onClick={(e) => handleNavLinkClick(e, 'about')}
-          >
-            <span>About</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/#spacestation-timeline"
-            className={activeSection === 'spacestation-timeline' ? 'active' : ''}
-            onClick={(e) => handleNavLinkClick(e, 'spacestation-timeline')}
-          >
-            <span>Werdegang</span>
-          </Link>
-        </li>
+    <nav
+      aria-label="Section navigation"
+      style={{
+        position: 'fixed',
+        right: '1.75rem',
+        top: '50%',
+        transform: 'translateY(-50%)',
+        zIndex: 30,
+        display: 'none',
+        flexDirection: 'column',
+        alignItems: 'center',
+        gap: 0,
+      }}
+      className="lg:flex"
+    >
+      {SECTIONS.map(({ id, label }, i) => {
+        const isActive = active === id && isHome;
+        const isHovered = hoveredId === id;
 
-        <li>
-          <Link
-            to="/#projects"
-            className={activeSection === 'projects' ? 'active' : ''}
-            onClick={(e) => handleNavLinkClick(e, 'projects')}
-          >
-            <span>Projects</span>
-          </Link>
-        </li>
-        <li>
-          <Link
-            to="/#contact"
-            className={activeSection === 'contact' ? 'active' : ''}
-            onClick={(e) => handleNavLinkClick(e, 'contact')}
-          >
-            <span>Contact</span>
-          </Link>
-        </li>
-      </ul>
+        return (
+          <div key={id} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            {/* Connecting line above (not for first) */}
+            {i > 0 && (
+              <div
+                style={{
+                  width: '1px',
+                  height: '20px',
+                  background: isActive
+                    ? 'linear-gradient(to bottom, rgba(96,165,250,0.3), rgba(96,165,250,0.15))'
+                    : 'rgba(255,255,255,0.06)',
+                  transition: 'background 0.3s',
+                }}
+              />
+            )}
+
+            {/* Dot + tooltip wrapper */}
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              {/* Tooltip */}
+              <div
+                style={{
+                  position: 'absolute',
+                  right: 'calc(100% + 12px)',
+                  whiteSpace: 'nowrap',
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: '11px',
+                  color: isActive ? '#60A5FA' : 'rgba(148,163,184,0.7)',
+                  letterSpacing: '0.06em',
+                  opacity: isHovered || isActive ? 1 : 0,
+                  transform: isHovered || isActive ? 'translateX(0)' : 'translateX(4px)',
+                  transition: 'opacity 0.2s ease, transform 0.2s ease, color 0.3s ease',
+                  pointerEvents: 'none',
+                  textTransform: 'uppercase',
+                  fontWeight: isActive ? 600 : 400,
+                }}
+              >
+                {label}
+              </div>
+
+              {/* Dot */}
+              {isHome ? (
+                <button
+                  onClick={() => scrollTo(id)}
+                  onMouseEnter={() => setHoveredId(id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  aria-label={`Scroll to ${label}`}
+                  style={{
+                    width: isActive ? '9px' : '6px',
+                    height: isActive ? '9px' : '6px',
+                    borderRadius: '50%',
+                    background: isActive ? '#3B82F6' : 'rgba(255,255,255,0.15)',
+                    border: 'none',
+                    cursor: 'pointer',
+                    padding: 0,
+                    transition: 'width 0.25s ease, height 0.25s ease, background 0.25s ease, box-shadow 0.25s ease',
+                    boxShadow: isActive
+                      ? '0 0 10px rgba(59,130,246,0.7), 0 0 20px rgba(59,130,246,0.3)'
+                      : isHovered
+                      ? '0 0 8px rgba(255,255,255,0.2)'
+                      : 'none',
+                  }}
+                />
+              ) : (
+                <Link
+                  to={`/#${id}`}
+                  aria-label={`Go to ${label}`}
+                  onMouseEnter={() => setHoveredId(id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  style={{
+                    display: 'block',
+                    width: '6px',
+                    height: '6px',
+                    borderRadius: '50%',
+                    background: 'rgba(255,255,255,0.15)',
+                    transition: 'background 0.2s',
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        );
+      })}
     </nav>
   );
 };

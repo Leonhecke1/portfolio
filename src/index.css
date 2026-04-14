@@ -1,24 +1,147 @@
-html {
-  scroll-behavior: smooth;
+@import "tailwindcss";
+
+/* ─── Design tokens ─────────────────────────────────────────────── */
+@theme {
+  /* Fonts */
+  --font-syne:    'Syne', sans-serif;
+  --font-dm-sans: 'DM Sans', sans-serif;
+  --font-mono:    'JetBrains Mono', monospace;
+
+  /* Backgrounds */
+  --color-bg:      #070A12;
+  --color-surface: #0B1120;
+  --color-surface2: #101828;
+
+  /* Borders */
+  --color-border:       rgba(255,255,255,0.07);
+  --color-border-hover: rgba(96,165,250,0.25);
+
+  /* Text */
+  --color-text-1: #EEF2FF;
+  --color-text-2: #8B96AA;
+  --color-text-3: #3D4D60;
+
+  /* Accents */
+  --color-blue:   #3B82F6;
+  --color-blue-l: #60A5FA;
+  --color-purple: #7C3AED;
+  --color-purple-l: #A78BFA;
+  --color-teal:   #0EA5E9;
+  --color-green:  #10B981;
 }
 
+/* ─── CSS custom props (accessible from inline styles) ───────────── */
 :root {
-  font-family: 'Roboto Mono', monospace;
-  line-height: 1.5;
-  font-weight: 400;
+  --bg:         #070A12;
+  --surface:    #0B1120;
+  --surface2:   #101828;
+  --border:     rgba(255,255,255,0.07);
+  --text-1:     #EEF2FF;
+  --text-2:     #8B96AA;
+  --text-3:     #3D4D60;
+  --blue:       #3B82F6;
+  --blue-l:     #60A5FA;
+  --purple:     #7C3AED;
+  --green:      #10B981;
+}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+/* ─── Base ───────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; color-scheme: dark; }
+*, *::before, *::after { box-sizing: border-box; }
 
+body {
+  margin: 0;
+  min-height: 100vh;
+  min-width: 320px;
+  background-color: var(--bg) !important;
+  font-family: 'DM Sans', sans-serif;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  min-width: 320px;
-  min-height: 100vh;
+/* ─── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.14); }
+
+/* ─── Selection ──────────────────────────────────────────────────── */
+::selection { background: rgba(59,130,246,0.22); color: #EEF2FF; }
+
+/* ─── Focus ──────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid rgba(59,130,246,0.55); outline-offset: 3px; }
+
+/* ─── Responsive base ───────────────────────────────────────────── */
+/* Prevent horizontal overflow on all screens */
+html, body { overflow-x: hidden; }
+
+/* Minimum touch target size */
+button, a, [role="button"] { touch-action: manipulation; }
+
+/* Reduced-motion: disable Framer Motion transitions via preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ─── Marquee scroll ────────────────────────────────────────────── */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ─── Capability card orbit ──────────────────────────────────────── */
+@keyframes orbit-a { from { transform: rotate(0deg)   translateX(44px); } to { transform: rotate(360deg)  translateX(44px); } }
+@keyframes orbit-b { from { transform: rotate(120deg) translateX(66px); } to { transform: rotate(480deg)  translateX(66px); } }
+@keyframes orbit-c { from { transform: rotate(240deg) translateX(34px); } to { transform: rotate(600deg)  translateX(34px); } }
+@keyframes node-pulse { 0%,100% { opacity: 0.35; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.4); } }
+@keyframes line-draw  { from { stroke-dashoffset: 120; } to { stroke-dashoffset: 0; } }
+
+/* ─── Quick Tour highlight ───────────────────────────────────────── */
+[data-tour="active"] {
+  animation: tour-glow 2.4s ease-in-out;
+}
+
+@keyframes tour-glow {
+  0%   { box-shadow: none; }
+  20%  { box-shadow: 0 -1px 40px rgba(59,130,246,0.14), inset 0 1px 0 rgba(96,165,250,0.2); }
+  75%  { box-shadow: 0 -1px 40px rgba(59,130,246,0.14), inset 0 1px 0 rgba(96,165,250,0.2); }
+  100% { box-shadow: none; }
+}
+
+/* ─── Enhanced visual mode ───────────────────────────────────────── */
+html.enhanced body {
+  background-color: var(--bg) !important;
+}
+
+/* Scanline texture — very subtle */
+html.enhanced body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(0,0,0,0.011) 3px,
+    rgba(0,0,0,0.011) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* Stronger card border glow in enhanced mode */
+html.enhanced article:hover {
+  border-color: rgba(96,165,250,0.35) !important;
+}
+
+/* Nebula drift animation */
+@keyframes nebula-drift {
+  0%   { transform: scale(1)   translate(0, 0); }
+  100% { transform: scale(1.06) translate(1%, 1.5%); }
 }

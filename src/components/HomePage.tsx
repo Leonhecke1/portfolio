@@ -1,21 +1,22 @@
 import Hero from './Hero';
+import TechMarquee from './TechMarquee';
 import About from './About';
+import Capabilities from './Capabilities';
 import SpaceStationTimeline from './SpaceStationTimeline';
 import Projects from './Projects';
+import Lab from './Lab';
 import Contact from './Contact';
-import SvgSeparator from './SvgSeparator';
 
 const HomePage = () => {
   return (
     <main>
       <Hero />
-      <SvgSeparator />
+      <TechMarquee />
       <About />
-      <SvgSeparator />
-      <SpaceStationTimeline /> {/* Render the new SpaceStationTimeline component */}
-      <SvgSeparator />
+      <Capabilities />
+      <SpaceStationTimeline />
       <Projects />
-      <SvgSeparator />
+      <Lab />
       <Contact />
     </main>
   );
