@@ -5,7 +5,7 @@
 set -e
 
 SERVER="leon@192.168.2.48"
-REMOTE_DIR="/var/www/portfolio"
+REMOTE_DIR="/var/www/vite-app"
 
 echo "==> Build..."
 npm run build
