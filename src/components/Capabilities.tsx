@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Monitor, Wand2, Zap, TrendingUp, Layers, Globe, Coffee } from 'lucide-react';
 import { fadeUp, stagger, viewport } from '../lib/motion';
+import { useContent } from '../contexts/ContentContext';
 
 /* ── Count-up hook ───────────────────────────────────────────────── */
 function useCountUp(target: number, duration: number, active: boolean) {
@@ -24,15 +25,17 @@ function useCountUp(target: number, duration: number, active: boolean) {
   return val;
 }
 
-/* ── Stats bar ───────────────────────────────────────────────────── */
-const STATS = [
-  { target: 3,   suffix: '+',  label: 'Years\nExperience',   icon: TrendingUp, color: 'rgba(96,165,250,0.9)'  },
-  { target: 15,  suffix: '+',  label: 'Projects\nDelivered', icon: Layers,     color: 'rgba(167,139,250,0.9)' },
-  { target: 10,  suffix: '+',  label: 'Technologies\nUsed',  icon: Zap,        color: 'rgba(52,211,153,0.9)'  },
-  { target: 100, suffix: '%',  label: 'Remote\nReady',       icon: Globe,      color: 'rgba(251,191,36,0.9)'  },
+/* ── Static visual config for stats ────────────────────────────── */
+const STAT_ICONS = [
+  { icon: TrendingUp, color: 'rgba(96,165,250,0.9)'  },
+  { icon: Layers,     color: 'rgba(167,139,250,0.9)' },
+  { icon: Zap,        color: 'rgba(52,211,153,0.9)'  },
+  { icon: Globe,      color: 'rgba(251,191,36,0.9)'  },
 ];
 
-const StatItem = ({ stat, active }: { stat: typeof STATS[0]; active: boolean }) => {
+type StatItemData = { id?: string; target: number; suffix: string; label: string; icon: typeof TrendingUp; color: string };
+
+const StatItem = ({ stat, active }: { stat: StatItemData; active: boolean }) => {
   const count = useCountUp(stat.target, 1.4, active);
   const Icon  = stat.icon;
   return (
@@ -65,6 +68,11 @@ const StatItem = ({ stat, active }: { stat: typeof STATS[0]; active: boolean }) 
 const StatsBar = () => {
   const ref  = useRef<HTMLDivElement>(null);
   const [started, setStarted] = useState(false);
+  const { content } = useContent();
+  const stats: StatItemData[] = content.capabilities.stats.map((s, i) => ({
+    ...s,
+    ...(STAT_ICONS[i] ?? STAT_ICONS[0]),
+  }));
 
   useEffect(() => {
     const el = ref.current;
@@ -89,10 +97,10 @@ const StatsBar = () => {
         marginBottom: 'clamp(3rem, 6vw, 5rem)',
       }}
     >
-      {STATS.map((stat, i) => (
-        <div key={i} style={{ display: 'flex', flex: '1 1 120px', minWidth: 0 }}>
+      {stats.map((stat, i) => (
+        <div key={stat.id ?? i} style={{ display: 'flex', flex: '1 1 120px', minWidth: 0 }}>
           <StatItem stat={stat} active={started} />
-          {i < STATS.length - 1 && (
+          {i < stats.length - 1 && (
             <div style={{
               width: '1px', alignSelf: 'stretch',
               background: 'rgba(255,255,255,0.05)',
@@ -196,73 +204,44 @@ interface CapData {
   Bg: React.FC<{ visible: boolean }>;
 }
 
-const CAPS: CapData[] = [
-  {
-    number: '01', Icon: Monitor,
-    title: 'Interfaces',
-    headline: 'Pixel-perfect UI development',
-    body: 'Crafting responsive, accessible React applications with clean architecture, semantic markup, and obsessive attention to detail.',
-    tools: ['React', 'TypeScript', 'Tailwind CSS', 'SCSS'],
-    accent: '#60A5FA', accentBg: 'rgba(59,130,246,0.07)', accentBorder: 'rgba(96,165,250,0.28)',
-    Bg: GridBg,
-  },
-  {
-    number: '02', Icon: Wand2,
-    title: 'Motion & 3D',
-    headline: 'Animation and spatial experiences',
-    body: 'Bringing depth and life to the web through fluid animations, page transitions, and interactive 3D scenes built with Three.js.',
-    tools: ['Three.js', 'R3F', 'Framer Motion', 'WebGL'],
-    accent: '#A78BFA', accentBg: 'rgba(124,58,237,0.07)', accentBorder: 'rgba(167,139,250,0.28)',
-    Bg: OrbitBg,
-  },
-  {
-    number: '03', Icon: Coffee,
-    title: 'Architecture',
-    headline: 'Scalable and performant systems',
-    body: 'Building robust frontend foundations — clean APIs, optimized bundles, developer-friendly codebases that teams actually enjoy working in.',
-    tools: ['Node.js', 'Vite', 'Express', 'REST APIs'],
-    accent: '#34D399', accentBg: 'rgba(16,185,129,0.07)', accentBorder: 'rgba(52,211,153,0.28)',
-    Bg: NodeBg,
-  },
+/* Static visual config per card index */
+const CAP_VISUAL = [
+  { Icon: Monitor, accent: '#60A5FA', accentBg: 'rgba(59,130,246,0.07)', accentBorder: 'rgba(96,165,250,0.28)',  Bg: GridBg  },
+  { Icon: Wand2,   accent: '#A78BFA', accentBg: 'rgba(124,58,237,0.07)', accentBorder: 'rgba(167,139,250,0.28)', Bg: OrbitBg },
+  { Icon: Coffee,  accent: '#34D399', accentBg: 'rgba(16,185,129,0.07)', accentBorder: 'rgba(52,211,153,0.28)',  Bg: NodeBg  },
 ];
 
-const ease = [0.22, 1, 0.36, 1] as const;
 
 const CapCard = ({ cap }: { cap: CapData }) => {
-  const [hovered, setHovered] = useState(false);
   const { Icon, Bg } = cap;
 
   return (
     <motion.div
       variants={fadeUp}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
       style={{
         position: 'relative', borderRadius: '20px', overflow: 'hidden',
         padding: 'clamp(1.5rem, 3vw, 2rem)',
-        background: hovered ? cap.accentBg : 'rgba(255,255,255,0.025)',
-        border: `1px solid ${hovered ? cap.accentBorder : 'rgba(255,255,255,0.07)'}`,
-        boxShadow: hovered ? `0 0 40px ${cap.accentBg}` : 'none',
-        transition: 'background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease',
+        background: cap.accentBg,
+        border: `1px solid ${cap.accentBorder}`,
+        boxShadow: `0 0 40px ${cap.accentBg}`,
         cursor: 'default', minHeight: '280px',
         display: 'flex', flexDirection: 'column',
       }}
     >
       {/* Animated SVG background */}
-      <Bg visible={hovered} />
+      <Bg visible={true} />
 
       {/* Content layer */}
       <div style={{ position: 'relative', zIndex: 1, flex: 1, display: 'flex', flexDirection: 'column' }}>
 
         {/* Header row */}
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-          {/* Number watermark */}
+          {/* Number */}
           <span style={{
             fontFamily: "'Syne', sans-serif", fontWeight: 800,
-            fontSize: hovered ? '1rem' : '3.5rem',
-            color: hovered ? cap.accent : 'rgba(255,255,255,0.06)',
+            fontSize: '1rem',
+            color: cap.accent,
             lineHeight: 1, letterSpacing: '-0.04em',
-            transition: 'font-size 0.4s ease, color 0.4s ease',
           }}>
             {cap.number}
           </span>
@@ -270,32 +249,28 @@ const CapCard = ({ cap }: { cap: CapData }) => {
           {/* Icon */}
           <div style={{
             width: '36px', height: '36px', borderRadius: '10px',
-            background: hovered ? cap.accentBg : 'rgba(255,255,255,0.04)',
-            border: `1px solid ${hovered ? cap.accentBorder : 'rgba(255,255,255,0.07)'}`,
+            background: cap.accentBg,
+            border: `1px solid ${cap.accentBorder}`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'background 0.3s, border-color 0.3s',
             flexShrink: 0,
           }}>
-            <Icon size={16} color={hovered ? cap.accent : 'rgba(148,163,184,0.6)'} />
+            <Icon size={16} color={cap.accent} />
           </div>
         </div>
 
-        {/* Divider line that grows on hover */}
+        {/* Divider */}
         <div style={{
           height: '1px', borderRadius: '1px', marginBottom: '1rem',
-          background: hovered
-            ? `linear-gradient(to right, ${cap.accent}, transparent)`
-            : 'rgba(255,255,255,0.07)',
-          transition: 'background 0.4s ease',
+          background: `linear-gradient(to right, ${cap.accent}, transparent)`,
         }} />
 
         {/* Title */}
         <h3 style={{
           fontFamily: "'Syne', sans-serif", fontWeight: 800,
           fontSize: 'clamp(1.125rem, 2.5vw, 1.375rem)',
-          color: hovered ? '#EEF2FF' : 'rgba(238,242,255,0.85)',
+          color: '#EEF2FF',
           marginBottom: '0.625rem', lineHeight: 1.2,
-          letterSpacing: '-0.01em', transition: 'color 0.3s',
+          letterSpacing: '-0.01em',
         }}>
           {cap.title}
         </h3>
@@ -303,58 +278,40 @@ const CapCard = ({ cap }: { cap: CapData }) => {
         {/* Headline */}
         <p style={{
           fontFamily: "'DM Sans', sans-serif",
-          fontSize: '13px', color: hovered ? cap.accent : 'rgba(148,163,184,0.5)',
+          fontSize: '13px', color: cap.accent,
           marginBottom: '0', lineHeight: 1.5, fontStyle: 'italic',
-          transition: 'color 0.3s',
         }}>
           {cap.headline}
         </p>
 
-        {/* Revealed: body + tools */}
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
-              transition={{ duration: 0.3, ease }}
-              style={{ marginTop: '1rem' }}
-            >
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: '13.5px', color: 'rgba(148,163,184,0.75)',
-                lineHeight: 1.7, marginBottom: '1.25rem',
-              }}>
-                {cap.body}
-              </p>
+        {/* Body + tools */}
+        <div style={{ marginTop: '1rem' }}>
+          <p style={{
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: '13.5px', color: 'rgba(148,163,184,0.75)',
+            lineHeight: 1.7, marginBottom: '1.25rem',
+          }}>
+            {cap.body}
+          </p>
 
-              {/* Tool tags with stagger */}
-              <motion.div
-                variants={{ visible: { transition: { staggerChildren: 0.06 } } }}
-                initial="hidden"
-                animate="visible"
-                style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+            {cap.tools.map(tool => (
+              <span
+                key={tool}
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: '10px', letterSpacing: '0.06em',
+                  padding: '3px 10px', borderRadius: '6px',
+                  background: cap.accentBg,
+                  border: `1px solid ${cap.accentBorder}`,
+                  color: cap.accent,
+                }}
               >
-                {cap.tools.map(tool => (
-                  <motion.span
-                    key={tool}
-                    variants={{ hidden: { opacity: 0, scale: 0.85 }, visible: { opacity: 1, scale: 1 } }}
-                    style={{
-                      fontFamily: "'JetBrains Mono', monospace",
-                      fontSize: '10px', letterSpacing: '0.06em',
-                      padding: '3px 10px', borderRadius: '6px',
-                      background: cap.accentBg,
-                      border: `1px solid ${cap.accentBorder}`,
-                      color: cap.accent,
-                    }}
-                  >
-                    {tool}
-                  </motion.span>
-                ))}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                {tool}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
     </motion.div>
   );
@@ -362,6 +319,12 @@ const CapCard = ({ cap }: { cap: CapData }) => {
 
 /* ── Section ─────────────────────────────────────────────────────── */
 export default function Capabilities() {
+  const { content } = useContent();
+  const caps: CapData[] = content.capabilities.cards.map((card, i) => ({
+    ...card,
+    ...(CAP_VISUAL[i] ?? CAP_VISUAL[0]),
+  }));
+
   return (
     <section
       id="capabilities"
@@ -420,23 +383,9 @@ export default function Capabilities() {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
           style={{ gap: '1rem' }}
         >
-          {CAPS.map(cap => <CapCard key={cap.number} cap={cap} />)}
+          {caps.map(cap => <CapCard key={cap.number} cap={cap} />)}
         </motion.div>
 
-        {/* Hint label */}
-        <motion.p
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={viewport}
-          style={{
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '10px', letterSpacing: '0.14em', textTransform: 'uppercase',
-            color: 'rgba(61,77,96,0.7)', textAlign: 'center', marginTop: '1.5rem',
-          }}
-        >
-          hover cards to explore
-        </motion.p>
       </div>
     </section>
   );

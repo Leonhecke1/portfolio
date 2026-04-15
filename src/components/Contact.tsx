@@ -2,9 +2,8 @@ import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Send, CheckCircle, Copy, Check, Mail } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useContent } from '../contexts/ContentContext';
 import { fadeUp, stagger, viewport } from '../lib/motion';
-
-const EMAIL = 'leon.hecke@example.com';
 
 const inputBase: React.CSSProperties = {
   width: '100%',
@@ -21,6 +20,8 @@ const inputBase: React.CSSProperties = {
 
 const Contact = () => {
   const { t } = useLanguage();
+  const { content } = useContent();
+  const EMAIL = content.contact.email;
   const [form, setForm]         = useState({ name: '', email: '', message: '' });
   const [submitted, setSubmitted]   = useState(false);
   const [copied, setCopied]         = useState(false);

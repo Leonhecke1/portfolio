@@ -17,6 +17,7 @@ import { page } from './lib/motion';
 const ProjectDetail       = lazy(() => import('./components/ProjectDetail'));
 const PlanetaryDashboard  = lazy(() => import('./components/PlanetaryDashboard'));
 const ProjectDeltaSandbox = lazy(() => import('./components/ProjectDeltaSandbox'));
+const AdminPage           = lazy(() => import('./pages/AdminPage'));
 
 /* ── Fixed nebula blobs ─────────────────────────────────────────── */
 const Nebula = () => {
@@ -105,6 +106,7 @@ function App() {
                 <Route path="/project/:projectId"  element={<ProjectDetail />} />
                 <Route path="/planetary-dashboard" element={<PlanetaryDashboard />} />
                 <Route path="/project-delta"       element={<ProjectDeltaSandbox />} />
+                <Route path="/admin"               element={<AdminPage />} />
               </Routes>
             </Suspense>
             <Footer />

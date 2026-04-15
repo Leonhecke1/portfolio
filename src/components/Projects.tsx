@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { projects, type Project } from '../ProjectData';
+import type { Project } from '../ProjectData';
+import { useContent } from '../contexts/ContentContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { fadeUp, stagger, viewport } from '../lib/motion';
 
@@ -53,8 +54,10 @@ const TechTag = ({ tech }: { tech: string }) => (
 );
 
 const Projects = () => {
-  const { t }    = useLanguage();
-  const navigate = useNavigate();
+  const { t }       = useLanguage();
+  const { content } = useContent();
+  const navigate    = useNavigate();
+  const projects    = content.projects;
 
   const handleClick = (project: Project) => {
     if (project.link.startsWith('/') && project.link !== '/') {

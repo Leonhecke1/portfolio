@@ -1,8 +1,8 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { Briefcase, GraduationCap, Calendar, Building2 } from 'lucide-react';
-import { spacestationModules } from '../spacestationData';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useContent } from '../contexts/ContentContext';
 import type { ExperienceModule, EducationModule } from '../spacestationData';
 import { fadeUp, viewport } from '../lib/motion';
 
@@ -131,8 +131,10 @@ const EducationCard = ({ module }: { module: EducationModule }) => (
 );
 
 const SpaceStationTimeline = () => {
-  const { language } = useLanguage();
-  const sectionRef   = useRef<HTMLElement>(null);
+  const { language }   = useLanguage();
+  const { content }    = useContent();
+  const sectionRef     = useRef<HTMLElement>(null);
+  const spacestationModules = content.timeline;
 
   /* Scroll-driven line fill */
   const { scrollYProgress } = useScroll({

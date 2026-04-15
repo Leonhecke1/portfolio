@@ -1,50 +1,28 @@
 import { motion } from 'framer-motion';
 import { Monitor, Server, Wrench, Sparkles } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import { useContent } from '../contexts/ContentContext';
 import { fadeUp, stagger, viewport } from '../lib/motion';
 import StatusWidget from './StatusWidget';
 
-const skillCategories = [
-  {
-    label: 'Frontend',
-    icon: Monitor,
-    color: 'rgba(59,130,246,0.9)',
-    glow: 'rgba(59,130,246,0.12)',
-    glowHover: 'rgba(59,130,246,0.18)',
-    border: 'rgba(96,165,250,0.2)',
-    skills: ['React', 'TypeScript', 'JavaScript', 'SCSS / CSS', 'Tailwind CSS'],
-  },
-  {
-    label: 'Backend',
-    icon: Server,
-    color: 'rgba(167,139,250,0.9)',
-    glow: 'rgba(124,58,237,0.12)',
-    glowHover: 'rgba(124,58,237,0.18)',
-    border: 'rgba(167,139,250,0.2)',
-    skills: ['Node.js', 'Express.js', 'REST APIs', 'Shopware'],
-  },
-  {
-    label: 'Tooling',
-    icon: Wrench,
-    color: 'rgba(52,211,153,0.9)',
-    glow: 'rgba(16,185,129,0.1)',
-    glowHover: 'rgba(16,185,129,0.16)',
-    border: 'rgba(52,211,153,0.2)',
-    skills: ['Git', 'Vite', 'Scrum / Agile', 'SEO'],
-  },
-  {
-    label: 'Visual',
-    icon: Sparkles,
-    color: 'rgba(251,191,36,0.9)',
-    glow: 'rgba(245,158,11,0.08)',
-    glowHover: 'rgba(245,158,11,0.14)',
-    border: 'rgba(251,191,36,0.2)',
-    skills: ['Three.js', 'Framer Motion', 'Figma', 'Accessibility'],
-  },
-];
+/* Visual config per category id — stays static */
+const VISUAL: Record<string, {
+  icon: React.FC<{ size?: number; color?: string }>;
+  color: string; glow: string; glowHover: string; border: string;
+}> = {
+  frontend: { icon: Monitor,   color: 'rgba(59,130,246,0.9)',  glow: 'rgba(59,130,246,0.12)',  glowHover: 'rgba(59,130,246,0.18)',  border: 'rgba(96,165,250,0.2)'  },
+  backend:  { icon: Server,    color: 'rgba(167,139,250,0.9)', glow: 'rgba(124,58,237,0.12)',  glowHover: 'rgba(124,58,237,0.18)',  border: 'rgba(167,139,250,0.2)' },
+  tooling:  { icon: Wrench,    color: 'rgba(52,211,153,0.9)',  glow: 'rgba(16,185,129,0.1)',   glowHover: 'rgba(16,185,129,0.16)',  border: 'rgba(52,211,153,0.2)'  },
+  visual:   { icon: Sparkles,  color: 'rgba(251,191,36,0.9)',  glow: 'rgba(245,158,11,0.08)',  glowHover: 'rgba(245,158,11,0.14)',  border: 'rgba(251,191,36,0.2)'  },
+};
 
 const About = () => {
   const { t } = useLanguage();
+  const { content } = useContent();
+  const skillCategories = content.about.skills.map(cat => ({
+    ...cat,
+    ...(VISUAL[cat.id] ?? VISUAL['frontend']),
+  }));
 
   return (
     <section id="about" style={{ position: 'relative', padding: 'clamp(4rem, 10vw, 7rem) clamp(1rem, 4vw, 1.5rem)' }}>
