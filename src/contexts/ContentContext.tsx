@@ -3,8 +3,11 @@ import type { ReactNode } from 'react';
 import { defaultContent } from '../data/defaultContent';
 import type { SiteContent } from '../data/defaultContent';
 
-const CACHE_KEY  = 'portfolio_content_cache_v1';
-const API_SECRET = import.meta.env.VITE_ADMIN_PASSWORD as string | undefined;
+const CACHE_KEY = 'portfolio_content_cache_v1';
+
+function getToken() {
+  return sessionStorage.getItem('admin_token') ?? '';
+}
 
 /* ── Deep-merge helper ───────────────────────────────────────────── */
 function deepMerge<T>(base: T, override: Partial<T>): T {
@@ -49,7 +52,7 @@ async function apiSave(content: SiteContent): Promise<void> {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      ...(API_SECRET ? { Authorization: `Bearer ${API_SECRET}` } : {}),
+      Authorization: `Bearer ${getToken()}`,
     },
     body: JSON.stringify(content),
   });

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft, User, Layers, Zap, FolderOpen, Clock, Mail,
@@ -11,36 +11,110 @@ import type { Project } from '../ProjectData';
 import type { SpacestationModule, ExperienceModule, EducationModule } from '../spacestationData';
 import './Admin.css';
 
-/* ── Auth ────────────────────────────────────────────────────────── */
-const AUTH_KEY = 'admin_auth';
-const CORRECT  = import.meta.env.VITE_ADMIN_PASSWORD as string;
+/* ── Auth helpers ────────────────────────────────────────────────── */
+const TOKEN_KEY = 'admin_token';
 
+async function apiLogin(username: string, password: string): Promise<string> {
+  const res = await fetch('/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? 'Login fehlgeschlagen');
+  return data.token as string;
+}
+
+async function apiSetup(username: string, password: string): Promise<string> {
+  const res = await fetch('/api/auth/setup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error ?? 'Setup fehlgeschlagen');
+  return data.token as string;
+}
+
+async function checkSetupRequired(): Promise<boolean> {
+  try {
+    const res = await fetch('/api/auth/setup-required');
+    const data = await res.json();
+    return data.required === true;
+  } catch {
+    return false;
+  }
+}
+
+/* ── Login / Setup Gate ──────────────────────────────────────────── */
 const LoginGate = ({ onAuth }: { onAuth: () => void }) => {
+  const [mode,    setMode]    = useState<'loading' | 'login' | 'setup'>('loading');
+  const [user,    setUser]    = useState('');
   const [pw,      setPw]      = useState('');
+  const [pw2,     setPw2]     = useState('');
   const [visible, setVisible] = useState(false);
   const [error,   setError]   = useState('');
+  const [loading, setLoading] = useState(false);
   const [shake,   setShake]   = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  useEffect(() => {
+    checkSetupRequired().then(req => setMode(req ? 'setup' : 'login'));
+  }, []);
+
+  const triggerShake = (msg: string) => {
+    setError(msg);
+    setShake(true);
+    setTimeout(() => setShake(false), 500);
+  };
+
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (pw === CORRECT) {
-      sessionStorage.setItem(AUTH_KEY, '1');
+    setError('');
+    if (mode === 'setup' && pw !== pw2) {
+      triggerShake('Passwörter stimmen nicht überein.');
+      return;
+    }
+    if (mode === 'setup' && pw.length < 8) {
+      triggerShake('Passwort muss mindestens 8 Zeichen haben.');
+      return;
+    }
+    setLoading(true);
+    try {
+      const token = mode === 'setup'
+        ? await apiSetup(user, pw)
+        : await apiLogin(user, pw);
+      sessionStorage.setItem(TOKEN_KEY, token);
       onAuth();
-    } else {
-      setError('Falsches Passwort.');
-      setShake(true);
-      setPw('');
-      setTimeout(() => setShake(false), 500);
+    } catch (err: unknown) {
+      triggerShake(err instanceof Error ? err.message : 'Fehler');
+    } finally {
+      setLoading(false);
     }
   };
+
+  if (mode === 'loading') return (
+    <div className="admin-login-root">
+      <div className="admin-login-card" style={{ alignItems: 'center' }}>
+        <Lock size={20} color="rgba(96,165,250,0.4)" />
+      </div>
+    </div>
+  );
+
+  const isSetup = mode === 'setup';
 
   return (
     <div className="admin-login-root">
       <div className={`admin-login-card${shake ? ' admin-shake' : ''}`}>
         <div className="admin-login-header">
           <Lock size={20} color="rgba(96,165,250,0.7)" />
-          <h1 className="admin-login-title">Admin-Bereich</h1>
-          <p className="admin-login-subtitle">Nur für autorisierte Personen.</p>
+          <h1 className="admin-login-title">
+            {isSetup ? 'Admin einrichten' : 'Admin-Bereich'}
+          </h1>
+          <p className="admin-login-subtitle">
+            {isSetup
+              ? 'Erstelle deinen Admin-Account. Dieser Schritt ist nur einmalig möglich.'
+              : 'Nur für autorisierte Personen.'}
+          </p>
         </div>
 
         <form className="admin-login-form" onSubmit={submit}>
@@ -51,30 +125,55 @@ const LoginGate = ({ onAuth }: { onAuth: () => void }) => {
           )}
 
           <div className="admin-field">
+            <label className="admin-label">Benutzername</label>
+            <input
+              className="admin-input"
+              type="text"
+              value={user}
+              autoFocus
+              autoComplete="username"
+              onChange={e => { setUser(e.target.value); setError(''); }}
+            />
+          </div>
+
+          <div className="admin-field">
             <label className="admin-label">Passwort</label>
             <div style={{ position: 'relative' }}>
               <input
                 className="admin-input"
                 type={visible ? 'text' : 'password'}
                 value={pw}
-                autoFocus
-                autoComplete="current-password"
+                autoComplete={isSetup ? 'new-password' : 'current-password'}
                 onChange={e => { setPw(e.target.value); setError(''); }}
                 style={{ paddingRight: '2.5rem' }}
               />
-              <button
-                type="button"
-                className="admin-btn-icon"
+              <button type="button" className="admin-btn-icon"
                 onClick={() => setVisible(v => !v)}
-                style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)' }}
-              >
+                style={{ position: 'absolute', right: 6, top: '50%', transform: 'translateY(-50%)' }}>
                 {visible ? <EyeOff size={14} /> : <Eye size={14} />}
               </button>
             </div>
           </div>
 
-          <button type="submit" className="admin-btn admin-btn-primary admin-login-submit">
-            <Check size={13} /> Anmelden
+          {isSetup && (
+            <div className="admin-field">
+              <label className="admin-label">Passwort bestätigen</label>
+              <input
+                className="admin-input"
+                type={visible ? 'text' : 'password'}
+                value={pw2}
+                autoComplete="new-password"
+                onChange={e => { setPw2(e.target.value); setError(''); }}
+              />
+            </div>
+          )}
+
+          <button type="submit" className="admin-btn admin-btn-primary admin-login-submit" disabled={loading}>
+            {loading
+              ? '...'
+              : isSetup
+                ? <><Check size={13} /> Account erstellen</>
+                : <><Check size={13} /> Anmelden</>}
           </button>
         </form>
 
@@ -752,9 +851,9 @@ const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
 ];
 
 export default function AdminPage() {
-  const [authed, setAuthed] = useState(() => sessionStorage.getItem(AUTH_KEY) === '1');
+  const [authed, setAuthed] = useState(() => !!sessionStorage.getItem(TOKEN_KEY));
 
-  const logout = () => { sessionStorage.removeItem(AUTH_KEY); setAuthed(false); };
+  const logout = () => { sessionStorage.removeItem(TOKEN_KEY); setAuthed(false); };
 
   if (!authed) return <LoginGate onAuth={() => setAuthed(true)} />;
 

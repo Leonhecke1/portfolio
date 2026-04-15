@@ -4,7 +4,10 @@
       "Bash(npm install:*)",
       "Bash(npm run:*)",
       "Bash(npx tsc:*)",
-      "Bash(wc -l /c/Users/leon/Desktop/portfolio/src/components/*.tsx)"
+      "Bash(wc -l /c/Users/leon/Desktop/portfolio/src/components/*.tsx)",
+      "Bash(ssh *)",
+      "Bash(sshpass *)",
+      "Bash(expect *)"
     ]
   },
   "enabledPlugins": {
