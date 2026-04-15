@@ -1,5 +1,5 @@
 #!/bin/bash
-# deploy.sh — Portfolio auf Server deployen
+# deploy.sh — Admin-Backend auf Server einrichten
 # Ausführen mit: bash deploy.sh
 
 set -e
@@ -7,44 +7,37 @@ set -e
 SERVER="leon@192.168.2.48"
 REMOTE_DIR="/var/www/vite-app"
 
-echo "==> Build..."
-npm run build
-
-echo "==> Dateien übertragen..."
-ssh "$SERVER" "mkdir -p $REMOTE_DIR/server $REMOTE_DIR/dist"
-
-# dist + server-Dateien übertragen
-scp -r dist/*           "$SERVER:$REMOTE_DIR/dist/"
+echo "==> Server-Dateien übertragen..."
 scp server/server.js    "$SERVER:$REMOTE_DIR/server/"
-scp server/planets.json "$SERVER:$REMOTE_DIR/server/"
 scp server/package.json "$SERVER:$REMOTE_DIR/server/"
 
 echo "==> Dependencies installieren..."
 ssh "$SERVER" "cd $REMOTE_DIR/server && npm install --omit=dev"
 
-echo "==> .env.local übertragen (JWT_SECRET)..."
-# Generiere einen zufälligen JWT_SECRET falls noch keiner existiert
-JWT_SECRET=$(openssl rand -hex 32 2>/dev/null || cat /dev/urandom | head -c 32 | base64)
+echo "==> JWT_SECRET setzen (falls noch nicht vorhanden)..."
 ssh "$SERVER" "
-  if [ ! -f $REMOTE_DIR/.env.local ]; then
-    echo 'JWT_SECRET=$JWT_SECRET' > $REMOTE_DIR/.env.local
-    echo '.env.local erstellt mit JWT_SECRET'
+  if grep -q JWT_SECRET $REMOTE_DIR/.env.local 2>/dev/null; then
+    echo '  JWT_SECRET bereits gesetzt, wird nicht überschrieben'
   else
-    echo '.env.local existiert bereits, wird nicht überschrieben'
+    SECRET=\$(tr -dc 'a-f0-9' < /dev/urandom | head -c 64)
+    echo \"JWT_SECRET=\$SECRET\" >> $REMOTE_DIR/.env.local
+    echo '  JWT_SECRET generiert und gesetzt'
   fi
 "
 
-echo "==> Server neustarten (PM2)..."
+echo "==> Server neustarten..."
 ssh "$SERVER" "
   cd $REMOTE_DIR
-  if command -v pm2 &> /dev/null; then
-    pm2 describe portfolio &>/dev/null && pm2 restart portfolio || pm2 start server/server.js --name portfolio
+  if command -v pm2 &>/dev/null; then
+    pm2 describe portfolio &>/dev/null \
+      && pm2 restart portfolio \
+      || pm2 start server/server.js --name portfolio --env production
+    pm2 save
   else
-    echo 'PM2 nicht gefunden — manuell starten: node $REMOTE_DIR/server/server.js'
+    echo 'PM2 nicht gefunden. Bitte manuell starten: node $REMOTE_DIR/server/server.js'
   fi
 "
 
 echo ""
-echo "✓ Deploy abgeschlossen!"
-echo "  Admin:     https://deine-domain.de/admin"
-echo "  Beim ersten Aufruf: Admin-Account anlegen"
+echo "✓ Fertig!"
+echo "  Beim ersten Aufruf von /admin: Admin-Account anlegen"
