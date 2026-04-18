@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   ArrowLeft, User, Layers, Zap, FolderOpen, Clock, Mail,
   Pencil, Trash2, Plus, X, Check, ExternalLink, ChevronRight,
-  RotateCcw, Lock, AlertCircle, Eye, EyeOff, Settings, Search,
+  RotateCcw, Lock, AlertCircle, Eye, EyeOff, Search,
   Sparkles, Monitor, Star, MousePointer, FlaskConical, Columns,
 } from 'lucide-react';
 import { useVisualMode } from '../contexts/VisualModeContext';
@@ -858,7 +858,7 @@ const ToggleSwitch = ({
 /* ── Section: Visuals & Settings ─────────────────────────────────── */
 const VisualsSection = ({ onSave }: { onSave: () => void }) => {
   const { content, updateContent } = useContent();
-  const { enhanced, setEnhanced } = useVisualMode();
+  const { setEnhanced } = useVisualMode();
   const [settings, setSettings] = useState<SiteSettings>(
     content.settings ?? {
       enhancedVisuals: false,

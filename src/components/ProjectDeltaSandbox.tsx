@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, RotateCcw, Trash2, X } from 'lucide-react';
+import { ArrowLeft, RotateCcw, X } from 'lucide-react';
 
 /* ── Layout constants ───────────────────────────────────────────── */
 const NW  = 228;  // node width
@@ -120,7 +120,7 @@ function nodeH(d: ND) {
   return NHH + PSY + rows * PRH + (d.ctrlH > 0 ? 20 + d.ctrlH : 8);
 }
 
-function portPos(n: SNode, d: ND, side: 'in'|'out', idx: number) {
+function portPos(n: SNode, _d: ND, side: 'in'|'out', idx: number) {
   const y = n.y + NHH + PSY + idx * PRH + PRH / 2;
   return { x: side === 'in' ? n.x : n.x + NW, y };
 }
@@ -154,7 +154,6 @@ function propagate(
     const tNode = nodes.find(n => n.id === w.tNode);
     if (!tNode) continue;
 
-    const def = DEFS[tNode.kind];
     const newIv: Record<string,SigVal> = { ...tNode.iv, [w.tPort]: val };
     const newSt: Record<string,unknown> = { ...tNode.st };
     const next: { port: string; v: SigVal }[] = [];
@@ -520,6 +519,7 @@ export default function ProjectDeltaSandbox() {
   useEffect(()=>{ wiresRef.current = wires; },[wires]);
 
   const intervalRefs = useRef<Record<string, ReturnType<typeof setInterval>>>({});
+  const timersRef    = useRef<Set<string>>(new Set());
   const canvasRef    = useRef<HTMLDivElement>(null);
   const interact     = useRef<{
     mode:'idle'|'drag-node'|'drag-bg'|'draw-wire';
@@ -567,36 +567,46 @@ export default function ProjectDeltaSandbox() {
   }, []);
 
   /* ── Timer management ── */
-  const toggleTimer = useCallback((nodeId: string) => {
-    setTimers(prev => {
-      const next = new Set(prev);
-      if (next.has(nodeId)) {
-        next.delete(nodeId);
-        clearInterval(intervalRefs.current[nodeId]);
-        delete intervalRefs.current[nodeId];
-      } else {
-        next.add(nodeId);
-        const node = nodesRef.current.find(n=>n.id===nodeId);
-        const ms = (node?.cfg.ms as number)||1000;
-        intervalRefs.current[nodeId] = setInterval(()=>{
-          fire(nodeId,'tick',null);
-        }, ms);
-      }
-      return next;
-    });
+  // Keep timersRef in sync so removeNode never has a stale view
+  useEffect(() => { timersRef.current = timers; }, [timers]);
+
+  const startTimer = useCallback((nodeId: string, ms: number) => {
+    // Guard: never create a duplicate interval
+    if (intervalRefs.current[nodeId]) {
+      clearInterval(intervalRefs.current[nodeId]);
+    }
+    intervalRefs.current[nodeId] = setInterval(() => {
+      fire(nodeId, 'tick', null);
+    }, ms);
   }, [fire]);
+
+  const stopTimer = useCallback((nodeId: string) => {
+    clearInterval(intervalRefs.current[nodeId]);
+    delete intervalRefs.current[nodeId];
+  }, []);
+
+  const toggleTimer = useCallback((nodeId: string) => {
+    if (timersRef.current.has(nodeId)) {
+      stopTimer(nodeId);
+      setTimers(prev => { const n = new Set(prev); n.delete(nodeId); return n; });
+    } else {
+      const node = nodesRef.current.find(n => n.id === nodeId);
+      const ms = (node?.cfg.ms as number) || 1000;
+      startTimer(nodeId, ms);
+      setTimers(prev => { const n = new Set(prev); n.add(nodeId); return n; });
+    }
+  }, [startTimer, stopTimer]);
 
   // Restart timer when ms changes
   const handleUpdateCfg = useCallback((nodeId: string, cfg: Record<string,unknown>) => {
-    setNodes(prev=>prev.map(n=>n.id===nodeId?{...n,cfg}:n));
-    if (timers.has(nodeId) && cfg.ms) {
-      clearInterval(intervalRefs.current[nodeId]);
-      intervalRefs.current[nodeId] = setInterval(()=>fire(nodeId,'tick',null), cfg.ms as number);
+    setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, cfg } : n));
+    if (timersRef.current.has(nodeId) && cfg.ms) {
+      startTimer(nodeId, cfg.ms as number);
     }
-  }, [timers, fire]);
+  }, [startTimer]);
 
   const handleUpdateSt = useCallback((nodeId: string, st: Record<string,unknown>) => {
-    setNodes(prev=>prev.map(n=>n.id===nodeId?{...n,st}:n));
+    setNodes(prev => prev.map(n => n.id === nodeId ? { ...n, st } : n));
   }, []);
 
   /* ── Add node ── */
@@ -618,14 +628,14 @@ export default function ProjectDeltaSandbox() {
 
   /* ── Remove node ── */
   const removeNode = useCallback((nodeId: string) => {
-    if (timers.has(nodeId)) {
-      clearInterval(intervalRefs.current[nodeId]);
-      delete intervalRefs.current[nodeId];
-      setTimers(prev=>{ const n=new Set(prev); n.delete(nodeId); return n; });
+    // Use timersRef (always current) — not the `timers` state closure
+    if (timersRef.current.has(nodeId)) {
+      stopTimer(nodeId);
+      setTimers(prev => { const n = new Set(prev); n.delete(nodeId); return n; });
     }
-    setNodes(prev=>prev.filter(n=>n.id!==nodeId));
-    setWires(prev=>prev.filter(w=>w.fNode!==nodeId&&w.tNode!==nodeId));
-  }, [timers]);
+    setNodes(prev => prev.filter(n => n.id !== nodeId));
+    setWires(prev => prev.filter(w => w.fNode !== nodeId && w.tNode !== nodeId));
+  }, [stopTimer]);
 
   /* ── Canvas mouse helpers ── */
   function canvasXY(e: React.MouseEvent) {
