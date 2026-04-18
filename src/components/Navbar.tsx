@@ -6,13 +6,16 @@ import { useNavigation } from '../contexts/NavigationContext';
 import { useVisualMode } from '../contexts/VisualModeContext';
 
 const LINKS = [
-  { label_en: 'Home',     label_de: 'Start',     id: 'hero'     },
-  { label_en: 'About',    label_de: 'Über mich', id: 'about'    },
-  { label_en: 'Projects', label_de: 'Projekte',  id: 'projects' },
-  { label_en: 'Contact',  label_de: 'Kontakt',   id: 'contact'  },
+  { label_en: 'Home',         label_de: 'Start',        id: 'hero'                  },
+  { label_en: 'About',        label_de: 'Über mich',    id: 'about'                 },
+  { label_en: 'Capabilities', label_de: 'Skills',       id: 'capabilities'          },
+  { label_en: 'Timeline',     label_de: 'Werdegang',    id: 'spacestation-timeline' },
+  { label_en: 'Projects',     label_de: 'Projekte',     id: 'projects'              },
+  { label_en: 'Lab',          label_de: 'Lab',          id: 'lab'                   },
+  { label_en: 'Contact',      label_de: 'Kontakt',      id: 'contact'               },
 ];
 
-const SECTION_IDS = ['hero', 'about', 'spacestation-timeline', 'projects', 'lab', 'contact'];
+const SECTION_IDS = ['hero', 'about', 'capabilities', 'spacestation-timeline', 'projects', 'lab', 'contact'];
 
 export default function Navbar() {
   const { language, setLanguage } = useLanguage();
@@ -49,9 +52,7 @@ export default function Navbar() {
     if (isMenuOpen) toggleMenu();
   };
 
-  const activeLink = LINKS.find(
-    l => l.id === activeId || (activeId === 'spacestation-timeline' && l.id === 'about')
-  ) ?? null;
+  const activeLink = LINKS.find(l => l.id === activeId) ?? null;
 
   return (
     <header style={{
@@ -85,9 +86,9 @@ export default function Navbar() {
           <span style={{ color: 'rgba(96,165,250,0.75)' }}> /&gt;</span>
         </button>
 
-        {/* Desktop links — hidden below md via CSS class only (no inline display) */}
-        <ul className="hidden md:flex" style={{
-          gap: '2.25rem', listStyle: 'none', margin: 0, padding: 0,
+        {/* Desktop links — hidden below lg via CSS class only (no inline display) */}
+        <ul className="hidden lg:flex" style={{
+          gap: '1.5rem', listStyle: 'none', margin: 0, padding: 0,
           alignItems: 'center',
         }}>
           {LINKS.map(({ label_en, label_de, id }) => {
@@ -154,35 +155,47 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Visual mode toggle — desktop only (no inline display, class handles it) */}
-          <button
+          {/* Visual mode toggle — desktop only */}
+          <motion.button
             onClick={toggleMode}
             title={enhanced ? 'Disable enhanced visuals' : 'Enable enhanced visuals'}
-            className="hidden sm:flex"
+            className="hidden lg:flex"
+            animate={enhanced ? 'on' : 'off'}
+            whileHover="hover"
+            variants={{
+              off:   { background: 'rgba(255,255,255,0.04)', borderColor: 'rgba(255,255,255,0.08)' },
+              on:    { background: 'rgba(124,58,237,0.12)',  borderColor: 'rgba(167,139,250,0.3)'  },
+              hover: { background: 'rgba(124,58,237,0.16)',  borderColor: 'rgba(167,139,250,0.4)'  },
+            }}
             style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              alignItems: 'center', justifyContent: 'center',
-              padding: '8px',
-              color: enhanced ? 'rgba(167,139,250,0.9)' : 'rgba(100,116,139,0.5)',
-              transition: 'color 0.2s',
-              filter: enhanced ? 'drop-shadow(0 0 6px rgba(167,139,250,0.5))' : 'none',
-            }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLButtonElement).style.color = enhanced
-                ? 'rgba(196,181,253,1)' : 'rgba(167,139,250,0.8)';
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLButtonElement).style.color = enhanced
-                ? 'rgba(167,139,250,0.9)' : 'rgba(100,116,139,0.5)';
+              alignItems: 'center', gap: '5px',
+              padding: '5px 10px 5px 7px',
+              borderRadius: '999px',
+              border: '1px solid',
+              cursor: 'pointer',
+              transition: 'box-shadow 0.3s',
+              boxShadow: enhanced ? '0 0 14px rgba(124,58,237,0.25)' : 'none',
             }}
           >
-            <Sparkles size={15} />
-          </button>
+            <motion.span
+              animate={{ rotate: enhanced ? 360 : 0, color: enhanced ? 'rgba(196,181,253,0.9)' : 'rgba(100,116,139,0.6)' }}
+              transition={{ duration: 0.5, ease: 'easeOut' }}
+              style={{ display: 'flex' }}
+            >
+              <Sparkles size={13} />
+            </motion.span>
+            <motion.span
+              animate={{ color: enhanced ? 'rgba(196,181,253,0.9)' : 'rgba(100,116,139,0.6)' }}
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.06em' }}
+            >
+              {enhanced ? 'ON' : 'OFF'}
+            </motion.span>
+          </motion.button>
 
-          {/* Hamburger — mobile only (no inline display, class handles it) */}
+          {/* Hamburger — below lg only */}
           <button
             onClick={toggleMenu}
-            className="md:hidden"
+            className="lg:hidden"
             aria-label="Toggle menu"
             aria-expanded={isMenuOpen}
             style={{
@@ -217,8 +230,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* ── Mobile drawer — below md only (no inline display) ───── */}
-      <div className="md:hidden">
+      {/* ── Mobile drawer — below lg only ───── */}
+      <div className="lg:hidden">
         <AnimatePresence initial={false}>
           {isMenuOpen && (
             <motion.div
@@ -269,21 +282,39 @@ export default function Navbar() {
                   );
                 })}
 
-                {/* Visual mode toggle */}
-                <button
-                  onClick={toggleMode}
-                  style={{
+                {/* Visual mode toggle — mobile */}
+                <div style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  padding: '0.875rem 0', marginTop: '0.25rem',
+                  borderTop: '1px solid rgba(255,255,255,0.04)',
+                }}>
+                  <span style={{
                     display: 'flex', alignItems: 'center', gap: '0.625rem',
-                    width: '100%', background: 'none', border: 'none', cursor: 'pointer',
-                    padding: '0.875rem 0', marginTop: '0.25rem',
                     fontFamily: "'DM Sans', sans-serif", fontSize: '13px',
-                    color: enhanced ? 'rgba(167,139,250,0.85)' : 'rgba(100,116,139,0.6)',
-                    transition: 'color 0.2s',
-                  }}
-                >
-                  <Sparkles size={13} />
-                  {enhanced ? 'Enhanced visuals on' : 'Enhanced visuals off'}
-                </button>
+                    color: 'rgba(100,116,139,0.7)',
+                  }}>
+                    <Sparkles size={13} color={enhanced ? 'rgba(167,139,250,0.8)' : 'rgba(100,116,139,0.5)'} />
+                    Enhanced visuals
+                  </span>
+                  <button
+                    onClick={toggleMode}
+                    style={{
+                      display: 'flex', alignItems: 'center', gap: '5px',
+                      padding: '4px 10px 4px 8px',
+                      borderRadius: '999px',
+                      border: `1px solid ${enhanced ? 'rgba(167,139,250,0.3)' : 'rgba(255,255,255,0.1)'}`,
+                      background: enhanced ? 'rgba(124,58,237,0.12)' : 'rgba(255,255,255,0.04)',
+                      cursor: 'pointer',
+                      fontFamily: "'JetBrains Mono', monospace", fontSize: '10px',
+                      color: enhanced ? 'rgba(196,181,253,0.9)' : 'rgba(100,116,139,0.6)',
+                      boxShadow: enhanced ? '0 0 12px rgba(124,58,237,0.2)' : 'none',
+                      transition: 'all 0.3s',
+                    }}
+                  >
+                    <Sparkles size={11} />
+                    {enhanced ? 'ON' : 'OFF'}
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}

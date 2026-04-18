@@ -119,7 +119,7 @@ html.enhanced body {
   background-color: var(--bg) !important;
 }
 
-/* Scanline texture — very subtle */
+/* Scanline texture — very subtle CRT-style */
 html.enhanced body::after {
   content: '';
   position: fixed;
@@ -128,20 +128,66 @@ html.enhanced body::after {
     0deg,
     transparent 0px,
     transparent 3px,
-    rgba(0,0,0,0.011) 3px,
-    rgba(0,0,0,0.011) 4px
+    rgba(0,0,0,0.013) 3px,
+    rgba(0,0,0,0.013) 4px
   );
   pointer-events: none;
   z-index: 9998;
 }
 
-/* Stronger card border glow in enhanced mode */
+/* Stronger card/article hover glow */
 html.enhanced article:hover {
   border-color: rgba(96,165,250,0.35) !important;
+  box-shadow: 0 0 32px rgba(59,130,246,0.07) !important;
+}
+
+/* Scrollbar — accent color in enhanced mode */
+html.enhanced ::-webkit-scrollbar-thumb {
+  background: rgba(96,165,250,0.15);
+}
+html.enhanced ::-webkit-scrollbar-thumb:hover {
+  background: rgba(96,165,250,0.28);
+}
+
+/* Text selection — brighter in enhanced mode */
+html.enhanced ::selection {
+  background: rgba(124,58,237,0.28);
+  color: #EEF2FF;
+}
+
+/* Focus ring — more vibrant */
+html.enhanced :focus-visible {
+  outline-color: rgba(167,139,250,0.7);
+}
+
+/* Glowing borders on inputs in enhanced mode */
+html.enhanced input:focus,
+html.enhanced textarea:focus {
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.12) !important;
+  border-color: rgba(167,139,250,0.4) !important;
+}
+
+/* Vignette overlay — subtle depth framing */
+html.enhanced body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 100% 100% at 50% 50%,
+    transparent 60%,
+    rgba(0,0,0,0.18) 100%
+  );
+  pointer-events: none;
+  z-index: 9997;
 }
 
 /* Nebula drift animation */
 @keyframes nebula-drift {
   0%   { transform: scale(1)   translate(0, 0); }
   100% { transform: scale(1.06) translate(1%, 1.5%); }
+}
+
+/* Enhanced shimmer on nav underline */
+html.enhanced [data-enhanced-glow] {
+  filter: drop-shadow(0 0 8px rgba(96,165,250,0.4));
 }

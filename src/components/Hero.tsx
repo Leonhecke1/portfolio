@@ -115,20 +115,22 @@ const Hero = () => {
         </motion.div>
 
         {/* ── 3D canvas column ─────────────────────────────────────── */}
-        <motion.div
-          className="hidden lg:flex justify-center items-center"
-          style={canvasMotion}
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <div className="hero-canvas-wrapper">
-            <div aria-hidden="true" className="hero-canvas-glow" />
-            <Suspense fallback={null}>
-              <HeroCanvas />
-            </Suspense>
-          </div>
-        </motion.div>
+        {content.settings?.showHeroCanvas !== false && (
+          <motion.div
+            className="hidden lg:flex justify-center items-center"
+            style={canvasMotion}
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <div className="hero-canvas-wrapper">
+              <div aria-hidden="true" className="hero-canvas-glow" />
+              <Suspense fallback={null}>
+                <HeroCanvas />
+              </Suspense>
+            </div>
+          </motion.div>
+        )}
 
       </div>
 

@@ -3,10 +3,12 @@ import { Link } from 'react-router-dom';
 import {
   ArrowLeft, User, Layers, Zap, FolderOpen, Clock, Mail,
   Pencil, Trash2, Plus, X, Check, ExternalLink, ChevronRight,
-  RotateCcw, Lock, AlertCircle, Eye, EyeOff,
+  RotateCcw, Lock, AlertCircle, Eye, EyeOff, Settings, Search,
+  Sparkles, Monitor, Star, MousePointer, FlaskConical, Columns,
 } from 'lucide-react';
+import { useVisualMode } from '../contexts/VisualModeContext';
 import { useContent } from '../contexts/ContentContext';
-import type { SkillCategory, StatItem, CapabilityCard } from '../data/defaultContent';
+import type { SkillCategory, StatItem, CapabilityCard, SiteSettings } from '../data/defaultContent';
 import type { Project } from '../ProjectData';
 import type { SpacestationModule, ExperienceModule, EducationModule } from '../spacestationData';
 import './Admin.css';
@@ -186,7 +188,7 @@ const LoginGate = ({ onAuth }: { onAuth: () => void }) => {
 };
 
 /* ── Types ───────────────────────────────────────────────────────── */
-type Section = 'hero' | 'about' | 'capabilities' | 'projects' | 'timeline' | 'contact';
+type Section = 'hero' | 'about' | 'capabilities' | 'projects' | 'timeline' | 'contact' | 'visuals' | 'seo';
 
 /* ── Toast ───────────────────────────────────────────────────────── */
 const Toast = ({ visible, error }: { visible: boolean; error?: string | null }) => {
@@ -702,6 +704,15 @@ const TimelineSection = ({ onSave }: { onSave: () => void }) => {
     onSave();
   };
 
+  const move = (i: number, dir: -1 | 1) => {
+    const next = [...modules];
+    const j = i + dir;
+    if (j < 0 || j >= next.length) return;
+    [next[i], next[j]] = [next[j], next[i]];
+    setModules(next);
+    updateContent({ timeline: next });
+  };
+
   const setExp = (field: keyof ExperienceModule, val: unknown) =>
     setDraft(d => d?.type === 'experience' ? ({ ...d, [field]: val }) as ExperienceModule : d);
   const setEdu = (field: keyof EducationModule, val: unknown) =>
@@ -727,6 +738,14 @@ const TimelineSection = ({ onSave }: { onSave: () => void }) => {
               </p>
             </div>
             <div className="admin-list-item-actions">
+              <button className="admin-btn-icon" title="Nach oben" onClick={() => move(i, -1)} disabled={i === 0}
+                style={{ opacity: i === 0 ? 0.3 : 1 }}>
+                <ChevronRight size={14} style={{ transform: 'rotate(-90deg)' }} />
+              </button>
+              <button className="admin-btn-icon" title="Nach unten" onClick={() => move(i, 1)} disabled={i === modules.length - 1}
+                style={{ opacity: i === modules.length - 1 ? 0.3 : 1 }}>
+                <ChevronRight size={14} style={{ transform: 'rotate(90deg)' }} />
+              </button>
               <button className="admin-btn-icon" onClick={() => openEdit(i)}><Pencil size={13} /></button>
               <button className="admin-btn-icon" onClick={() => remove(i)}>
                 <Trash2 size={13} style={{ color: 'rgba(252,165,165,0.7)' }} />
@@ -808,6 +827,180 @@ const TimelineSection = ({ onSave }: { onSave: () => void }) => {
   );
 };
 
+/* ── Toggle Switch ───────────────────────────────────────────────── */
+const ToggleSwitch = ({
+  checked,
+  onChange,
+  label,
+  description,
+  icon,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+  description?: string;
+  icon?: React.ReactNode;
+}) => (
+  <div className="admin-toggle-row" onClick={() => onChange(!checked)}>
+    <div className="admin-toggle-info">
+      {icon && <span className="admin-toggle-icon">{icon}</span>}
+      <div>
+        <p className="admin-toggle-label">{label}</p>
+        {description && <p className="admin-toggle-desc">{description}</p>}
+      </div>
+    </div>
+    <div className={`admin-toggle-track${checked ? ' admin-toggle-on' : ''}`}>
+      <div className="admin-toggle-thumb" />
+    </div>
+  </div>
+);
+
+/* ── Section: Visuals & Settings ─────────────────────────────────── */
+const VisualsSection = ({ onSave }: { onSave: () => void }) => {
+  const { content, updateContent } = useContent();
+  const { enhanced, setEnhanced } = useVisualMode();
+  const [settings, setSettings] = useState<SiteSettings>(
+    content.settings ?? {
+      enhancedVisuals: false,
+      showHeroCanvas: true,
+      showStarField: true,
+      showCursorGlow: true,
+      showLab: true,
+      showMarquee: true,
+    }
+  );
+
+  const update = (patch: Partial<SiteSettings>) => {
+    const next = { ...settings, ...patch };
+    setSettings(next);
+    // Sync enhanced visuals to VisualModeContext immediately for live preview
+    if (patch.enhancedVisuals !== undefined) setEnhanced(patch.enhancedVisuals);
+    updateContent({ settings: next });
+    onSave();
+  };
+
+  return (
+    <div>
+      <div className="admin-section-header">
+        <h2 className="admin-section-title">Visuals & Settings</h2>
+        <p className="admin-section-desc">Visuelle Effekte und Sichtbarkeit von Sektionen steuern.</p>
+      </div>
+
+      <p className="admin-label" style={{ marginBottom: '0.75rem' }}>Visuelle Effekte</p>
+      <div className="admin-toggle-group">
+        <ToggleSwitch
+          checked={settings.enhancedVisuals}
+          onChange={v => update({ enhancedVisuals: v })}
+          label="Enhanced Mode"
+          description="Intensivere Nebula-Glows und zusätzliche Hintergrundeffekte."
+          icon={<Sparkles size={14} />}
+        />
+        <ToggleSwitch
+          checked={settings.showHeroCanvas}
+          onChange={v => update({ showHeroCanvas: v })}
+          label="Hero 3D Canvas"
+          description="Glasiges Ikosaeder im Hero-Bereich (Three.js / WebGL)."
+          icon={<Monitor size={14} />}
+        />
+        <ToggleSwitch
+          checked={settings.showStarField}
+          onChange={v => update({ showStarField: v })}
+          label="Sternenhintergrund"
+          description="Animiertes Sternenfeld im Hintergrund der gesamten Seite."
+          icon={<Star size={14} />}
+        />
+        <ToggleSwitch
+          checked={settings.showCursorGlow}
+          onChange={v => update({ showCursorGlow: v })}
+          label="Cursor-Glow"
+          description="Ambientes Licht, das dem Mauszeiger folgt."
+          icon={<MousePointer size={14} />}
+        />
+      </div>
+
+      <div className="admin-divider" />
+
+      <p className="admin-label" style={{ marginBottom: '0.75rem' }}>Sektionen</p>
+      <div className="admin-toggle-group">
+        <ToggleSwitch
+          checked={settings.showMarquee}
+          onChange={v => update({ showMarquee: v })}
+          label="Tech-Marquee"
+          description="Laufband mit Tech-Stack-Icons unterhalb des Hero-Bereichs."
+          icon={<Columns size={14} />}
+        />
+        <ToggleSwitch
+          checked={settings.showLab}
+          onChange={v => update({ showLab: v })}
+          label="Lab-Sektion"
+          description="Experimentelle Demos (Dot Wave, Scramble Text)."
+          icon={<FlaskConical size={14} />}
+        />
+      </div>
+
+      <p className="admin-hint" style={{ marginTop: '1.25rem' }}>
+        Änderungen werden sofort gespeichert und sind nach einem Seiten-Reload für alle Besucher sichtbar.
+      </p>
+    </div>
+  );
+};
+
+/* ── Section: SEO ────────────────────────────────────────────────── */
+const SeoSection = ({ onSave }: { onSave: () => void }) => {
+  const { content, updateContent } = useContent();
+  const [form, setForm] = useState(content.seo ?? { title: '', description: '' });
+
+  const save = () => {
+    updateContent({ seo: form });
+    onSave();
+  };
+
+  const charCount = form.description.length;
+  const descColor = charCount > 160 ? 'rgba(252,165,165,0.8)' : charCount > 130 ? 'rgba(251,191,36,0.8)' : 'rgba(100,116,139,0.7)';
+
+  return (
+    <div>
+      <div className="admin-section-header">
+        <h2 className="admin-section-title">SEO</h2>
+        <p className="admin-section-desc">Seitentitel und Meta-Beschreibung für Suchmaschinen.</p>
+      </div>
+
+      <div className="admin-form">
+        <div className="admin-field">
+          <label className="admin-label">Seitentitel</label>
+          <input
+            className="admin-input"
+            value={form.title}
+            onChange={e => setForm(f => ({ ...f, title: e.target.value }))}
+            placeholder="Leon Hecke — Frontend Developer"
+          />
+          <p className="admin-hint">Wird als Browser-Tab-Titel und in Suchergebnissen angezeigt. Idealerweise 50–60 Zeichen.</p>
+        </div>
+
+        <div className="admin-field">
+          <label className="admin-label">Meta-Beschreibung</label>
+          <textarea
+            className="admin-textarea"
+            value={form.description}
+            onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+            placeholder="Kurze Beschreibung, die in Suchergebnissen erscheint…"
+            style={{ minHeight: 80 }}
+          />
+          <p className="admin-hint" style={{ color: descColor }}>
+            {charCount} / 160 Zeichen {charCount > 160 ? '— zu lang!' : charCount > 130 ? '— knapp' : ''}
+          </p>
+        </div>
+
+        <div className="admin-form-actions">
+          <button className="admin-btn admin-btn-primary" onClick={save}>
+            <Check size={13} /> Speichern
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ── Section: Contact ────────────────────────────────────────────── */
 const ContactSection = ({ onSave }: { onSave: () => void }) => {
   const { content, updateContent } = useContent();
@@ -841,19 +1034,27 @@ const ContactSection = ({ onSave }: { onSave: () => void }) => {
 };
 
 /* ── Main AdminPage ──────────────────────────────────────────────── */
-const NAV: { id: Section; label: string; icon: React.ReactNode }[] = [
-  { id: 'hero',         label: 'Hero',         icon: <User size={14} /> },
-  { id: 'about',        label: 'Skills',        icon: <Layers size={14} /> },
-  { id: 'capabilities', label: 'Capabilities',  icon: <Zap size={14} /> },
-  { id: 'projects',     label: 'Projekte',      icon: <FolderOpen size={14} /> },
-  { id: 'timeline',     label: 'Timeline',      icon: <Clock size={14} /> },
-  { id: 'contact',      label: 'Kontakt',       icon: <Mail size={14} /> },
+const NAV: { id: Section; label: string; icon: React.ReactNode; group?: string }[] = [
+  { id: 'hero',         label: 'Hero',         icon: <User size={14} />,       group: 'Inhalt' },
+  { id: 'about',        label: 'Skills',        icon: <Layers size={14} />,     group: 'Inhalt' },
+  { id: 'capabilities', label: 'Capabilities',  icon: <Zap size={14} />,        group: 'Inhalt' },
+  { id: 'projects',     label: 'Projekte',      icon: <FolderOpen size={14} />, group: 'Inhalt' },
+  { id: 'timeline',     label: 'Timeline',      icon: <Clock size={14} />,      group: 'Inhalt' },
+  { id: 'contact',      label: 'Kontakt',       icon: <Mail size={14} />,       group: 'Inhalt' },
+  { id: 'visuals',      label: 'Visuals',       icon: <Sparkles size={14} />,   group: 'Site' },
+  { id: 'seo',          label: 'SEO',           icon: <Search size={14} />,     group: 'Site' },
 ];
 
-export default function AdminPage() {
-  const [authed, setAuthed] = useState(() => !!sessionStorage.getItem(TOKEN_KEY));
+const IS_DEV = import.meta.env.DEV;
 
-  const logout = () => { sessionStorage.removeItem(TOKEN_KEY); setAuthed(false); };
+export default function AdminPage() {
+  const [authed, setAuthed] = useState(() => IS_DEV || !!sessionStorage.getItem(TOKEN_KEY));
+
+  const logout = () => {
+    if (IS_DEV) return; // no logout in dev
+    sessionStorage.removeItem(TOKEN_KEY);
+    setAuthed(false);
+  };
 
   if (!authed) return <LoginGate onAuth={() => setAuthed(true)} />;
 
@@ -891,25 +1092,31 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
           <Link to="/" className="admin-back-link" target="_blank" rel="noopener noreferrer">
             <ExternalLink size={12} /> Portfolio ansehen
           </Link>
-          <button className="admin-back-link" onClick={onLogout} style={{ background: 'none', cursor: 'pointer' }}>
-            <ArrowLeft size={12} /> Abmelden
-          </button>
+          {!IS_DEV && (
+            <button className="admin-back-link" onClick={onLogout} style={{ background: 'none', cursor: 'pointer' }}>
+              <ArrowLeft size={12} /> Abmelden
+            </button>
+          )}
         </div>
       </header>
 
       <div className="admin-body">
         {/* Sidebar */}
         <aside className="admin-sidebar">
-          <span className="admin-sidebar-label">Inhalt</span>
-          {NAV.map(item => (
-            <button
-              key={item.id}
-              className={`admin-nav-item${section === item.id ? ' active' : ''}`}
-              onClick={() => setSection(item.id)}
-            >
-              {item.icon}
-              {item.label}
-            </button>
+          {(['Inhalt', 'Site'] as const).map(group => (
+            <div key={group}>
+              <span className="admin-sidebar-label">{group}</span>
+              {NAV.filter(n => n.group === group).map(item => (
+                <button
+                  key={item.id}
+                  className={`admin-nav-item${section === item.id ? ' active' : ''}`}
+                  onClick={() => setSection(item.id)}
+                >
+                  {item.icon}
+                  {item.label}
+                </button>
+              ))}
+            </div>
           ))}
 
           <span className="admin-sidebar-label" style={{ marginTop: 'auto' }}>Verwaltung</span>
@@ -926,6 +1133,8 @@ function AdminPanel({ onLogout }: { onLogout: () => void }) {
           {section === 'projects'     && <ProjectsSection     onSave={showToast} />}
           {section === 'timeline'     && <TimelineSection     onSave={showToast} />}
           {section === 'contact'      && <ContactSection      onSave={showToast} />}
+          {section === 'visuals'      && <VisualsSection      onSave={showToast} />}
+          {section === 'seo'          && <SeoSection          onSave={showToast} />}
         </main>
       </div>
 

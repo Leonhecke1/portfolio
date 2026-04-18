@@ -8,9 +8,11 @@ import SideNav       from './components/SideNav';
 import StarBackground from './components/StarBackground';
 import ScrollProgress from './components/ScrollProgress';
 import CursorGlow    from './components/CursorGlow';
+import BackToTop     from './components/BackToTop';
 import HomePage       from './components/HomePage';
 import { useNavigation } from './contexts/NavigationContext';
 import { VisualModeProvider, useVisualMode } from './contexts/VisualModeContext';
+import { useContent } from './contexts/ContentContext';
 import { page } from './lib/motion';
 
 /* Lazy-load heavy routes — these are never visited on initial page load */
@@ -49,7 +51,28 @@ const Nebula = () => {
 function App() {
   const location = useLocation();
   const { isMenuOpen, toggleMenu } = useNavigation();
+  const { content } = useContent();
+  const { toggle: toggleVisuals } = useVisualMode();
   const prevPath = useRef(location.pathname);
+  const settings = content.settings;
+
+  /* Keyboard shortcut: Shift+E toggles enhanced mode */
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement)?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if (e.shiftKey && e.key === 'E') toggleVisuals();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [toggleVisuals]);
+
+  /* SEO meta sync */
+  useEffect(() => {
+    if (content.seo?.title) document.title = content.seo.title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && content.seo?.description) metaDesc.setAttribute('content', content.seo.description);
+  }, [content.seo]);
 
   /* Scroll / hash handling */
   useEffect(() => {
@@ -71,10 +94,11 @@ function App() {
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', color: 'var(--text-1)', position: 'relative' }}>
 
       {/* ── Background layers ──────────────────────────────── */}
-      <StarBackground />   {/* z-index: 0 — star canvas, fixed */}
-      <Nebula />           {/* z-index: 1 — nebula gradients, fixed */}
-      <CursorGlow />       {/* z-index: 6 — cursor ambient light */}
-      <ScrollProgress />   {/* z-index: 200 — reading indicator */}
+      {settings?.showStarField  !== false && <StarBackground />}
+      <Nebula />
+      {settings?.showCursorGlow !== false && <CursorGlow />}
+      <ScrollProgress />
+      <BackToTop />
 
       {/* Mobile overlay */}
       {isMenuOpen && (

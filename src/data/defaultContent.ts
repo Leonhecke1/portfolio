@@ -24,6 +24,15 @@ export interface CapabilityCard {
   tools: string[];
 }
 
+export interface SiteSettings {
+  enhancedVisuals: boolean;
+  showHeroCanvas: boolean;
+  showStarField: boolean;
+  showCursorGlow: boolean;
+  showLab: boolean;
+  showMarquee: boolean;
+}
+
 export interface SiteContent {
   hero: {
     role: string;
@@ -42,6 +51,11 @@ export interface SiteContent {
   contact: {
     email: string;
   };
+  seo: {
+    title: string;
+    description: string;
+  };
+  settings: SiteSettings;
 }
 
 export const defaultContent: SiteContent = {
@@ -93,5 +107,17 @@ export const defaultContent: SiteContent = {
   timeline: defaultTimeline,
   contact: {
     email: 'email@leon-luca.de',
+  },
+  seo: {
+    title: 'Leon Hecke — Frontend Developer',
+    description: 'Frontend Developer at WEBneo GmbH specialising in React, TypeScript and interactive web experiences.',
+  },
+  settings: {
+    enhancedVisuals: false,
+    showHeroCanvas: true,
+    showStarField: true,
+    showCursorGlow: true,
+    showLab: true,
+    showMarquee: true,
   },
 };
