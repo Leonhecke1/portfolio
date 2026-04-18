@@ -1,5 +1,5 @@
 #!/bin/bash
-# deploy.sh — Admin-Backend auf Server einrichten
+# deploy.sh — Frontend bauen + Backend + alles auf Server deployen
 # Ausführen mit: bash deploy.sh
 
 set -e
@@ -7,14 +7,27 @@ set -e
 SERVER="leon@192.168.2.48"
 REMOTE_DIR="/var/www/vite-app"
 
+# ── 1. Frontend bauen ────────────────────────────────────────────────
+echo "==> Frontend bauen..."
+npm run build
+
+# ── 2. dist/ hochladen (alten Inhalt ersetzen) ──────────────────────
+echo "==> Frontend-Dateien hochladen..."
+# --delete entfernt auf dem Server Dateien, die lokal nicht mehr existieren
+# (verhindert, dass alte Chunk-Hashes übrig bleiben)
+rsync -az --delete dist/ "$SERVER:$REMOTE_DIR/dist/"
+
+# ── 3. Server-Dateien übertragen ────────────────────────────────────
 echo "==> Server-Dateien übertragen..."
 scp server/server.js    "$SERVER:$REMOTE_DIR/server/"
 scp server/package.json "$SERVER:$REMOTE_DIR/server/"
 
+# ── 4. Dependencies installieren ────────────────────────────────────
 echo "==> Dependencies installieren..."
 ssh "$SERVER" "cd $REMOTE_DIR/server && npm install --omit=dev"
 
-echo "==> JWT_SECRET setzen (falls noch nicht vorhanden)..."
+# ── 5. JWT_SECRET setzen (falls noch nicht vorhanden) ───────────────
+echo "==> JWT_SECRET prüfen..."
 ssh "$SERVER" "
   if grep -q JWT_SECRET $REMOTE_DIR/.env.local 2>/dev/null; then
     echo '  JWT_SECRET bereits gesetzt, wird nicht überschrieben'
@@ -25,6 +38,7 @@ ssh "$SERVER" "
   fi
 "
 
+# ── 6. Server neustarten ─────────────────────────────────────────────
 echo "==> Server neustarten..."
 ssh "$SERVER" "
   cd $REMOTE_DIR
@@ -39,5 +53,4 @@ ssh "$SERVER" "
 "
 
 echo ""
-echo "✓ Fertig!"
-echo "  Beim ersten Aufruf von /admin: Admin-Account anlegen"
+echo "✓ Fertig! Seite ist live."

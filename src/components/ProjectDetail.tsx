@@ -89,8 +89,8 @@ const ProjectDetail = () => {
 
   return (
     <main
-      className="min-h-screen px-6 py-10"
-      style={{ backgroundColor: '#080C14' }}
+      className="min-h-screen px-6"
+      style={{ backgroundColor: '#080C14', paddingTop: '88px', paddingBottom: '3rem' }}
     >
       <div className="max-w-5xl mx-auto">
 

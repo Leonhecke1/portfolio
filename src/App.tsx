@@ -55,6 +55,7 @@ function App() {
   const { toggle: toggleVisuals } = useVisualMode();
   const prevPath = useRef(location.pathname);
   const settings = content.settings;
+  const isAdmin = location.pathname === '/admin';
 
   /* Keyboard shortcut: Shift+E toggles enhanced mode */
   useEffect(() => {
@@ -93,15 +94,15 @@ function App() {
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg)', color: 'var(--text-1)', position: 'relative' }}>
 
-      {/* ── Background layers ──────────────────────────────── */}
-      {settings?.showStarField  !== false && <StarBackground />}
-      <Nebula />
-      {settings?.showCursorGlow !== false && <CursorGlow />}
-      <ScrollProgress />
-      <BackToTop />
+      {/* ── Background layers — hidden on admin ────────────── */}
+      {!isAdmin && settings?.showStarField  !== false && <StarBackground />}
+      {!isAdmin && <Nebula />}
+      {!isAdmin && settings?.showCursorGlow !== false && <CursorGlow />}
+      {!isAdmin && <ScrollProgress />}
+      {!isAdmin && <BackToTop />}
 
       {/* Mobile overlay */}
-      {isMenuOpen && (
+      {!isAdmin && isMenuOpen && (
         <div onClick={toggleMenu} style={{
           position: 'fixed', inset: 0, zIndex: 40,
           background: 'rgba(0,0,0,0.55)',
@@ -109,9 +110,9 @@ function App() {
         }} />
       )}
 
-      {/* ── Persistent UI ──────────────────────────────────── */}
-      <SideNav />   {/* z-index: 30 */}
-      <Navbar />    {/* z-index: 50 */}
+      {/* ── Persistent UI — hidden on admin ────────────────── */}
+      {!isAdmin && <SideNav />}
+      {!isAdmin && <Navbar />}
 
       {/* ── Page content with route transitions ────────────── */}
       <div style={{ position: 'relative', zIndex: 10 }}>
