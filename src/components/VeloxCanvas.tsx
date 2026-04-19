@@ -10,8 +10,8 @@ const PALETTE: Record<Palette, { base: number; range: number; bg: string }> = {
   aurora: { base: 145, range: 65, bg: 'rgba(6,12,10,0.18)'   },
 };
 
-const COUNT_PRESETS = [80, 130, 200] as const;
-const MAX = 200;
+const COUNT_PRESETS = [80, 130, 200, 350] as const;
+const MAX = 350;
 const CONN_DIST  = 90;
 const CONN_DIST2 = CONN_DIST * CONN_DIST;
 
@@ -354,7 +354,7 @@ const VeloxCanvas = () => {
         {/* Particle count */}
         <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '11px', color: 'rgba(148,163,184,0.38)' }}>{t('velox.label.particles')}</span>
         {COUNT_PRESETS.map(c => (
-          <button key={c} style={pill(count === c)} onClick={() => setCount(c as 80|130|200)}>{c}</button>
+          <button key={c} style={pill(count === c)} onClick={() => setCount(c as 80|130|200|350)}>{c}</button>
         ))}
 
         <div style={{ width: '1px', height: '16px', background: 'rgba(255,255,255,0.07)', margin: '0 2px' }} />
