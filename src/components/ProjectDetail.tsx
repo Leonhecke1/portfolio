@@ -6,6 +6,7 @@ import { projects } from '../ProjectData';
 import CssGridGenerator from './CssGridGenerator';
 import PlanetaryDashboard from './PlanetaryDashboard';
 import ProjectDeltaSandbox from './ProjectDeltaSandbox';
+import VeloxCanvas from './VeloxCanvas';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -68,6 +69,7 @@ const ProjectDetail = () => {
     switch (currentId) {
       case 1: return <CssGridGenerator />;
       case 2: return <PlanetaryDashboard />;
+      case 3: return <VeloxCanvas />;
       case 4: return <ProjectDeltaSandbox />;
       default:
         return (

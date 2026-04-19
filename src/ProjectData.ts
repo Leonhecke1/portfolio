@@ -96,12 +96,64 @@ const [gridState, setGridState] = useState<GridState>({
   },
   {
     id: 3,
-    title: 'Project Gamma',
-    description: 'A brief description of Project Gamma, highlighting its key features and technologies.',
-    technologies: ['Python', 'Django', 'PostgreSQL'],
+    title: 'Velox Canvas',
+    description: 'A real-time particle physics playground built with the Canvas 2D API. 130 particles respond to mouse interaction through three physics modes — attract, repel, and orbital gravity — rendered at 60fps with velocity-driven trail effects and dynamic hue shifting.',
+    technologies: ['TypeScript', 'Canvas 2D API', 'React Hooks', 'RequestAnimationFrame', 'Physics Simulation'],
     link: '#',
     position: { top: '30%', left: '60%' },
-    technicalInsight: 'This project illustrates full-stack development using Python with the Django framework for the backend, and PostgreSQL for robust data management. It features RESTful API design, database migrations, user authentication, and a scalable architecture suitable for complex web applications. Frontend interactions are handled through Django templates with sprinkles of JavaScript.'
+    technicalInsight: 'Velox Canvas demonstrates fine-grained control over browser rendering primitives without any graphics library. The animation loop uses requestAnimationFrame for 60fps throughput. A semi-transparent fill each frame creates motion trails without storing particle history — a classic technique that trades accuracy for near-zero memory overhead. Each particle\'s hue shifts proportionally to its speed, giving instant visual feedback on kinetic energy. Mouse forces are computed per-frame using an inverse-square law clamped to prevent instability at close range. All hot-path state lives in refs rather than React state, keeping the component tree from re-rendering on every frame.',
+    codeSnippets: [
+      {
+        title: 'Typed-array particle storage + Δt-scaled physics',
+        code: `// Parallel Float32Arrays — one per property, cache-friendly iteration
+const _px  = new Float32Array(MAX);
+const _pvx = new Float32Array(MAX);
+// ...
+
+// Inside RAF tick — force scaled by normalised Δt so simulation
+// runs at the same apparent speed regardless of frame rate
+const dt   = Math.min((now - prevTime) / 16.667, 2.5);
+const f    = Math.min(2400 / (dist * dist), 3.5); // inverse-square, clamped
+
+if (mode === 'attract') {
+  _pvx[i] += (dx / dist) * f * 0.045 * dt;
+  _pvy[i] += (dy / dist) * f * 0.045 * dt;
+} else if (mode === 'orbit') {           // perpendicular tangent → circular drift
+  _pvx[i] += ((dy / dist) * f * 0.03 - (dx / dist) * 0.012) * dt;
+  _pvy[i] -= ((dx / dist) * f * 0.03 - (dy / dist) * 0.012) * dt;
+}
+
+const damp = Math.pow(0.972, dt);        // frame-rate-independent damping
+_pvx[i] *= damp;`,
+        language: 'typescript'
+      },
+      {
+        title: 'Connection web — proximity graph in O(n²)',
+        code: `const CONN_DIST2 = 90 * 90; // compare squared distances — no sqrt needed
+
+if (showConnections) {
+  ctx.lineWidth = 0.6;
+  for (let i = 0; i < n - 1; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const dx = _px[i] - _px[j];
+      const dy = _py[i] - _py[j];
+      const d2 = dx * dx + dy * dy;      // cheap early-out
+      if (d2 < CONN_DIST2) {
+        const alpha = (1 - Math.sqrt(d2) / 90) * 0.28;
+        ctx.globalAlpha = alpha;
+        ctx.strokeStyle = \`hsl(\${_ph[i]}, 70%, 65%)\`;
+        ctx.beginPath();
+        ctx.moveTo(_px[i], _py[i]);
+        ctx.lineTo(_px[j], _py[j]);
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.globalAlpha = 1;
+}`,
+        language: 'typescript'
+      }
+    ]
   },
   {
     id: 4,
