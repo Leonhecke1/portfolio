@@ -1,11 +1,12 @@
 import React from 'react';
+import { useLanguage } from '../contexts/LanguageContext';
 
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
   return (
-    <footer className="main-footer">
-      <div className="footer-container">
-        <p className="copyright-text">&copy; {new Date().getFullYear()} My Portfolio. All rights reserved.</p>
-      </div>
+    <footer className="site-footer">
+      <p>&copy; {new Date().getFullYear()} Leon Hecke</p>
+      <p>{t('footer.edition')}</p>
     </footer>
   );
 };

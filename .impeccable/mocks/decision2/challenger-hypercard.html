@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Stapel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;600;800&family=Pixelify+Sans:wght@500&display=swap" rel="stylesheet">
+<style>
+  /* A one-bit card stack: black on white, dither for grey, buttons that invert when pressed. */
+  html, body { margin:0; width:1440px; height:900px; overflow:hidden; font-family:'Work Sans', sans-serif; color:#000;
+    background-color:#fff; background-image: radial-gradient(#000 1px, transparent 1.2px); background-size:4px 4px; }
+  .menubar { height:30px; background:#fff; border-bottom:2px solid #000; display:flex; align-items:center; gap:26px; padding:0 18px; font-family:'Pixelify Sans'; font-size:16px; }
+  .card { position:absolute; left:50%; top:52%; transform:translate(-50%,-50%); width:960px; height:640px; background:#fff; border:2px solid #000; box-shadow: 6px 6px 0 #000; }
+  .title { height:28px; border-bottom:2px solid #000; display:flex; align-items:center; justify-content:center; font-family:'Pixelify Sans'; font-size:15px;
+           background-image: repeating-linear-gradient(#000 0 1px, #fff 1px 3px); }
+  .title span { background:#fff; padding:0 12px; }
+  .inner { padding:56px 64px; display:grid; grid-template-columns: 1fr 300px; gap:48px; }
+  h1 { margin:0 0 18px; font-weight:800; font-size:76px; line-height:.95; letter-spacing:-.02em; }
+  p { font-size:19px; line-height:1.55; margin:0 0 34px; max-width:34ch; }
+  .btns { display:grid; gap:12px; }
+  .btn { border:2px solid #000; border-radius:10px; padding:14px 18px; font-weight:600; font-size:17px; display:flex; justify-content:space-between; }
+  .btn.on { background:#000; color:#fff; }
+  .side { border-left:2px solid #000; padding-left:32px; font-size:15px; line-height:1.6; }
+  .side b { display:block; font-family:'Pixelify Sans'; font-size:15px; margin-bottom:10px; }
+  .dith { height:140px; margin:18px 0; border:2px solid #000; background-image: radial-gradient(#000 1px, transparent 1.3px); background-size:3px 3px; }
+  .foot { position:absolute; bottom:18px; left:64px; right:64px; display:flex; justify-content:space-between; font-family:'Pixelify Sans'; font-size:15px; }
+</style>
+</head>
+<body>
+<div class="menubar"><b>⌘</b><span>Ablage</span><span>Bearbeiten</span><span>Gehe</span><span>Werkzeug</span><span style="margin-left:auto">DE · EN</span></div>
+<div class="card">
+  <div class="title"><span>Leon Hecke · Karte 1 von 6</span></div>
+  <div class="inner">
+    <div>
+      <h1>Leon Hecke</h1>
+      <p>Frontend-Entwickler. Dieser Stapel ist zum Lesen und zum Bauen: Jede Karte führt zu einem Projekt, das man direkt benutzen kann.</p>
+      <div class="btns">
+        <div class="btn on"><span>CSS Grid Generator</span><span>→</span></div>
+        <div class="btn"><span>Planetary Dashboard</span><span>→</span></div>
+        <div class="btn"><span>WIP Sandbox</span><span>→</span></div>
+      </div>
+    </div>
+    <div class="side">
+      <b>Über diesen Stapel</b>
+      React, TypeScript und Shopware im Alltag. Ausbildung bei der Telekom, heute bei WEBneo.
+      <div class="dith"></div>
+      Tipp: ⌘ + E schaltet in den Bearbeiten-Modus.
+    </div>
+  </div>
+  <div class="foot"><span>◀ Zurück</span><span>Weiter ▶</span></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>C · Glasplatte</title>
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/archivo/wdth.css">
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/martian-mono/standard.css">
+<style>
+  /* Astronomical glass plates were read as negatives: dark galaxies on clear glass, annotated by hand in ink. */
+  :root { --glass:#e9e7e1; --ink:#14161c; --ink-2:#4a4f5a; --ink-3:#727782; --mark:#b8322a; --line:rgba(20,22,28,.16); }
+  html, body { margin:0; height:100%; background:var(--glass); color:var(--ink); font-family:'Archivo Variable', sans-serif; }
+  .page { display:grid; grid-template-columns: 1fr 1fr; height:100vh; }
+  .text { display:flex; flex-direction:column; justify-content:space-between; padding:40px 56px 48px; }
+  nav { display:flex; gap:28px; font-stretch:75%; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+  nav b { color:var(--ink); font-weight:600; margin-right:auto; }
+  h1 { margin:0 0 20px; font-stretch:125%; font-weight:300; font-size:84px; line-height:.92; letter-spacing:-.03em; }
+  p { margin:0; font-size:18px; line-height:1.6; color:var(--ink-2); max-width:42ch; }
+  .meta { font-family:'Martian Mono Variable', monospace; font-stretch:87.5%; font-size:11px; color:var(--ink-3); line-height:1.8; }
+  .plate { position:relative; margin:32px 32px 32px 0; overflow:hidden; border:1px solid var(--line);
+           background:url(/field/smacs0723-2400.jpg) 55% 45% / cover; filter: grayscale(1) invert(1) contrast(1.15) brightness(1.05); }
+  .ann { position:absolute; inset:32px 32px 32px auto; width:calc(50% - 32px); pointer-events:none; }
+  .ann .c { position:absolute; border:1.5px solid var(--mark); border-radius:50%; transform:translate(-50%,-50%); }
+  .ann .l { position:absolute; font-family:'Martian Mono Variable', monospace; font-stretch:87.5%; font-size:12px; color:var(--mark); white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="text">
+    <nav><b>Leon Hecke</b><span>Arbeit</span><span>Werdegang</span><span>Kontakt</span><span>EN</span></nav>
+    <div>
+      <h1>Leon Hecke</h1>
+      <p>Frontend-Entwickler. Meine Projekte, markiert auf einer Platte des tiefsten Himmels, den wir je fotografiert haben – wie Astronomen früher ihre Glasplatten beschrifteten.</p>
+    </div>
+    <div class="meta">Platte LH · SMACS 0723 · NASA, ESA, CSA, STScI · CC BY 4.0<br>Negativdarstellung</div>
+  </div>
+  <div class="plate"></div>
+</div>
+<div class="ann">
+  <div class="c" style="left:62%;top:26%;width:90px;height:90px"></div><div class="l" style="left:calc(62% + 54px);top:calc(26% - 8px)">1 · CSS Grid Generator</div>
+  <div class="c" style="left:46%;top:56%;width:120px;height:120px"></div><div class="l" style="left:calc(46% + 68px);top:calc(56% + 30px)">2 · Planetary Dashboard</div>
+  <div class="c" style="left:82%;top:43%;width:76px;height:76px"></div><div class="l" style="left:calc(82% - 150px);top:calc(43% + 46px)">4 · WIP Sandbox</div>
+</div>
+</body>
+</html>

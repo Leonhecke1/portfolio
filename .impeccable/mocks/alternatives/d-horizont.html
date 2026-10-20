@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>D · Horizont</title>
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/archivo/wdth.css">
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/martian-mono/standard.css">
+<style>
+  :root { --ground:#05060a; --ink:#e9ecf1; --ink-2:#aeb4bf; --ink-3:#7f8796; --work:#e8b04a; --line:rgba(233,236,241,.14); }
+  html, body { margin:0; background:var(--ground); color:var(--ink); font-family:'Archivo Variable', sans-serif; }
+  header { display:flex; align-items:center; gap:28px; padding:22px 48px; }
+  header b { margin-right:auto; font-stretch:75%; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; }
+  header a { font-stretch:75%; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); text-decoration:none; }
+  .strip { height:46vh; margin:0 48px; background:url(/field/smacs0723-2400.jpg) 50% 46% / cover; filter:brightness(.72) saturate(.85); }
+  .below { display:grid; grid-template-columns: 7fr 5fr; gap:64px; padding:48px 48px 0; }
+  h1 { margin:0; font-stretch:125%; font-weight:300; font-size:96px; line-height:.92; letter-spacing:-.03em; }
+  .side p { margin:8px 0 28px; font-size:18px; line-height:1.6; color:var(--ink-2); max-width:40ch; }
+  .side a { display:inline-block; padding:13px 20px; background:var(--work); color:var(--ground); text-decoration:none; font-stretch:75%; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; }
+  .cap { margin:10px 48px 0; font-family:'Martian Mono Variable', monospace; font-stretch:87.5%; font-size:10px; color:var(--ink-3); }
+</style>
+</head>
+<body>
+<header><b>Leon Hecke</b><a href="#">Arbeit</a><a href="#">Werdegang</a><a href="#">Kontakt</a><a href="#">EN</a></header>
+<div class="strip"></div>
+<p class="cap">SMACS 0723 · NASA, ESA, CSA, STScI · CC BY 4.0</p>
+<div class="below">
+  <h1>Leon Hecke</h1>
+  <div class="side">
+    <p>Frontend-Entwickler für React, TypeScript und Shopware. Hier liegen meine Projekte als Live-Demos, mit dem Code dahinter.</p>
+    <a href="#">Projekte ansehen</a>
+  </div>
+</div>
+</body>
+</html>

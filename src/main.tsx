@@ -1,20 +1,18 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
-import './index.css'
-import App from './App.tsx'
+import '@fontsource-variable/rubik';
+import '@fontsource-variable/martian-mono/standard.css';
 import './styles/custom.scss';
-import { LanguageProvider } from './contexts/LanguageContext'; // Import LanguageProvider
-import { NavigationProvider } from './contexts/NavigationContext'; // Import NavigationProvider
+import App from './App.tsx'
+import { LanguageProvider } from './contexts/LanguageContext';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <BrowserRouter>
-      <NavigationProvider> {/* Wrap everything with NavigationProvider */}
-        <LanguageProvider>
-          <App />
-        </LanguageProvider>
-      </NavigationProvider>
+      <LanguageProvider>
+        <App />
+      </LanguageProvider>
     </BrowserRouter>
   </StrictMode>,
 )

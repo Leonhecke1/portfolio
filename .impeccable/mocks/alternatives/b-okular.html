@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>B · Okular</title>
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/archivo/wdth.css">
+<link rel="stylesheet" href="/node_modules/@fontsource-variable/martian-mono/standard.css">
+<style>
+  :root { --ground:#06070b; --ink:#e9ecf1; --ink-2:#aeb4bf; --ink-3:#7f8796; --work:#e8b04a; --line:rgba(233,236,241,.14); }
+  html, body { margin:0; height:100%; background:var(--ground); color:var(--ink); font-family:'Archivo Variable', sans-serif; }
+  .page { display:grid; grid-template-columns: 5fr 6fr; height:100vh; }
+  .left { display:flex; flex-direction:column; justify-content:space-between; padding:40px 56px 48px; }
+  .brand { font-stretch:75%; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); }
+  h1 { margin:0 0 18px; font-stretch:125%; font-weight:300; font-size:72px; line-height:.95; letter-spacing:-.03em; }
+  .intro { margin:0 0 56px; font-size:17px; line-height:1.6; color:var(--ink-2); max-width:40ch; }
+  ol { list-style:none; margin:0; padding:0; border-top:1px solid var(--line); }
+  li { display:grid; grid-template-columns: 72px 1fr; align-items:baseline; padding:18px 0; border-bottom:1px solid var(--line); color:var(--ink-3); }
+  li code { font-family:'Martian Mono Variable', monospace; font-stretch:87.5%; font-size:11px; }
+  li b { font-stretch:112.5%; font-weight:400; font-size:22px; letter-spacing:-.01em; }
+  li.on { color:var(--ink); }
+  li.on code { color:var(--work); }
+  li.on small { display:block; grid-column:2; margin-top:6px; font-size:15px; color:var(--ink-2); }
+  li small { display:none; }
+  .right { position:relative; display:grid; place-items:center; }
+  .eye { position:relative; width:min(68vh, 560px); aspect-ratio:1; border-radius:50%; overflow:hidden;
+         background:url(/field/smacs0723-2400.jpg) 51% 51% / 520% auto; box-shadow: 0 0 0 1px var(--line); }
+  .ring { position:absolute; width:min(68vh, 560px); aspect-ratio:1; border-radius:50%; }
+  .ring::before, .ring::after { content:''; position:absolute; left:50%; width:1px; height:18px; background:var(--ink-3); }
+  .ring::before { top:-28px; } .ring::after { bottom:-28px; }
+  .cap { position:absolute; bottom:48px; left:0; right:56px; text-align:center; font-family:'Martian Mono Variable', monospace; font-stretch:87.5%; font-size:11px; color:var(--ink-3); }
+  .scroll { font-size:13px; color:var(--ink-3); }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="left">
+    <div class="brand">Leon Hecke · Frontend-Entwickler</div>
+    <div>
+      <h1>Ein Objekt<br>nach dem anderen.</h1>
+      <p class="intro">Ein Blick durchs Okular: Scrollen führt das Teleskop von Projekt zu Projekt durch Webbs erstes Tiefenfeld.</p>
+      <ol>
+        <li><code>LH-W01</code><b>CSS Grid Generator</b></li>
+        <li class="on"><code>LH-W02</code><b>Planetary Dashboard</b><small>Planetendaten mit Filtern und 3D-Modellen. React, Node.js, Three.js.</small></li>
+        <li><code>LH-W04</code><b>WIP Sandbox</b></li>
+      </ol>
+    </div>
+    <div class="scroll">Scrollen, um weiterzuschwenken ↓</div>
+  </div>
+  <div class="right">
+    <div class="eye"></div>
+    <div class="ring"></div>
+    <p class="cap">07h 23m 19.0s · −73° 27′ 16.9″ · Planetary Dashboard</p>
+  </div>
+</div>
+</body>
+</html>

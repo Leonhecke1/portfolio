@@ -1,10 +1,12 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 import type { ReactNode } from 'react';
+
+export type Language = 'de' | 'en';
 
 // Define the shape of our language context
 interface LanguageContextType {
-  language: string;
-  setLanguage: (lang: string) => void;
+  language: Language;
+  setLanguage: (lang: Language) => void;
   t: (key: string) => string; // Translation function
 }
 
@@ -16,137 +18,158 @@ interface LanguageProviderProps {
   children: ReactNode;
 }
 
+const STORAGE_KEY = 'lh-language';
+
+// German is the primary audience; English mirrors every key.
+const translations: Record<Language, Record<string, string>> = {
+  en: {
+    'nav.skip': 'Skip to content',
+    'nav.label': 'Main',
+    'nav.home': 'Leon Hecke, to the start',
+    'nav.projects': 'Projects',
+    'nav.career': 'Career',
+    'nav.contact': 'Contact',
+    'cover.lede': 'Frontend developer. This portfolio is the building instructions for my workstation: my career is the desk, every project is a part on it, and its technologies are the pieces.',
+    'step.deskPart': 'Desk',
+    'cover.contents': 'Contents',
+    'cover.start': 'Start building',
+    'step.baseplate': 'The desk: career',
+    'step.baseplateLede': 'Everything else is built on this: training, school and the work I do every day.',
+    'step.careerParts': 'Parts in this step',
+    'step.skillParts': 'Loose parts: skills',
+    'step.parts': 'Parts',
+    'step.open': 'Open this step',
+    'step.done': 'Done',
+    'model.finished': 'The finished model: a workstation with desk, monitor, keyboard and coffee mug',
+    'model.inProgress': 'The model so far',
+    'model.step': 'Step',
+    'footer.edition': 'Building instructions · Edition 2026',
+    'project.stepNav': 'Steps',
+    'project.repo': 'Repository on GitHub',
+    'meta.title': 'Leon Hecke · Frontend developer',
+    'language.switch': 'Language',
+    'language.en': 'English',
+    'language.de': 'German',
+    'hero.name': 'Leon Hecke',
+    'hero.role': 'Frontend developer',
+    'hero.stack': 'React · TypeScript · Shopware',
+    'about.paragraph1': 'As a dedicated Frontend Developer with a passion for modern web technologies, I bring solid knowledge in React, TypeScript, and JavaScript. My expertise includes the conception, development, and maintenance of interactive web applications and Shopware stores.',
+    'about.paragraph2': 'I place great importance on performance optimization, user-friendliness, and accessibility. Using agile methods like Scrum and an eye for detail, I create efficient and scalable solutions.',
+    'about.languagesTitle': 'Languages',
+    'about.german': 'German (native speaker)',
+    'about.english': 'English (B2)',
+    'contact.title': 'Send a transmission',
+    'contact.intro': 'Questions about a demo, the code behind it, or anything else: write me.',
+    'contact.nameLabel': 'Name',
+    'contact.emailLabel': 'Email address',
+    'contact.messageLabel': 'Message',
+    'contact.submitButton': 'Open in mail app',
+    'contact.offline': 'Transmitter offline: no contact address is configured for this build yet.',
+    'contact.required': 'Please fill in your name, email address and message.',
+    'contact.opened': 'Your mail app should open with the message prefilled.',
+    'project.back': 'Back to the instructions',
+    'project.technicalInsightsTitle': 'Technical insights: how it works',
+    'project.codeSnippetsTitle': 'Key code snippets',
+    'project.live': 'View live project',
+    'project.demo': 'Sub-assembly: live demo',
+    'project.notFound': 'Step not found',
+    'project.notFoundText': 'There is no step with this number. Go back to the instructions and pick another one.',
+    'project.comingSoon': 'No demo or screenshot for this project yet.',
+  },
+  de: {
+    'nav.skip': 'Zum Inhalt springen',
+    'nav.label': 'Hauptnavigation',
+    'nav.home': 'Leon Hecke, zum Anfang',
+    'nav.projects': 'Projekte',
+    'nav.career': 'Werdegang',
+    'nav.contact': 'Kontakt',
+    'cover.lede': 'Frontend-Entwickler. Dieses Portfolio ist die Bauanleitung für meinen Arbeitsplatz: Mein Werdegang ist der Schreibtisch, jedes Projekt ein Bauteil darauf, und seine Technologien sind die Teile.',
+    'step.deskPart': 'Schreibtisch',
+    'cover.contents': 'Inhalt',
+    'cover.start': 'Bauanleitung starten',
+    'step.baseplate': 'Der Schreibtisch: Werdegang',
+    'step.baseplateLede': 'Darauf baut alles andere auf: Ausbildung, Schule und die Arbeit, die ich jeden Tag mache.',
+    'step.careerParts': 'Teile in diesem Schritt',
+    'step.skillParts': 'Lose Teile: Können',
+    'step.parts': 'Teile',
+    'step.open': 'Bauschritt öffnen',
+    'step.done': 'Fertig',
+    'model.finished': 'Das fertige Modell: ein Arbeitsplatz mit Schreibtisch, Monitor, Tastatur und Kaffeetasse',
+    'model.inProgress': 'Das Modell bis hierher',
+    'model.step': 'Schritt',
+    'footer.edition': 'Bauanleitung · Ausgabe 2026',
+    'project.stepNav': 'Bauschritte',
+    'project.repo': 'Repository auf GitHub',
+    'meta.title': 'Leon Hecke · Frontend-Entwickler',
+    'language.switch': 'Sprache',
+    'language.en': 'Englisch',
+    'language.de': 'Deutsch',
+    'hero.name': 'Leon Hecke',
+    'hero.role': 'Frontend-Entwickler',
+    'hero.stack': 'React · TypeScript · Shopware',
+    'about.paragraph1': 'Als engagierter Frontend-Entwickler mit einer Leidenschaft für moderne Webtechnologien bringe ich fundierte Kenntnisse in React, TypeScript und JavaScript mit. Meine Expertise umfasst die Konzeption, Entwicklung und Wartung von interaktiven Webanwendungen und Shopware-Shops.',
+    'about.paragraph2': 'Ich lege großen Wert auf Performance-Optimierung, Benutzerfreundlichkeit und Barrierefreiheit. Mit agilen Methoden wie Scrum und einem Auge für Details schaffe ich effiziente und skalierbare Lösungen.',
+    'about.languagesTitle': 'Sprachen',
+    'about.german': 'Deutsch (Muttersprache)',
+    'about.english': 'Englisch (B2)',
+    'contact.title': 'Eine Nachricht senden',
+    'contact.intro': 'Fragen zu einer Demo, zum Code dahinter oder zu etwas ganz anderem: Schreib mir.',
+    'contact.nameLabel': 'Name',
+    'contact.emailLabel': 'E-Mail-Adresse',
+    'contact.messageLabel': 'Nachricht',
+    'contact.submitButton': 'In Mail-App öffnen',
+    'contact.offline': 'Sender offline: Für diesen Build ist noch keine Kontaktadresse hinterlegt.',
+    'contact.required': 'Bitte Name, E-Mail-Adresse und Nachricht ausfüllen.',
+    'contact.opened': 'Deine Mail-App sollte sich mit der vorbereiteten Nachricht öffnen.',
+    'project.back': 'Zurück zur Bauanleitung',
+    'project.technicalInsightsTitle': 'Technische Einblicke: So funktioniert es',
+    'project.codeSnippetsTitle': 'Wichtige Code-Ausschnitte',
+    'project.live': 'Live-Projekt ansehen',
+    'project.demo': 'Baugruppe: Live-Demo',
+    'project.notFound': 'Bauschritt nicht gefunden',
+    'project.notFoundText': 'Einen Bauschritt mit dieser Nummer gibt es nicht. Geh zurück zur Bauanleitung und wähle einen anderen.',
+    'project.comingSoon': 'Für dieses Projekt gibt es noch keine Demo und keinen Screenshot.',
+  },
+};
+
+const readStoredLanguage = (): Language => {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    if (stored === 'de' || stored === 'en') return stored;
+  } catch {
+    // Storage can be unavailable (private mode, blocked site data); fall back to German.
+  }
+  return 'de';
+};
+
 // LanguageProvider component
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguageState] = useState<string>('en'); // Default language
+  const [language, setLanguageState] = useState<Language>(readStoredLanguage);
 
-  // Simple translation data (in a real app, this would be loaded from JSON files)
-  const translations: Record<string, Record<string, string>> = {
-    en: {
-      'header.title': 'My Portfolio',
-      'nav.home': 'Home',
-      'nav.about': 'About',
-      'nav.projects': 'Projects',
-      'nav.contact': 'Contact',
-      'nav.dashboard': 'Planetary Dashboard',
-      'hero.greeting': 'Hello, I\'m',
-      'hero.name': 'Leon Hecke',
-      'hero.tagline': 'A creative developer passionate about building engaging web experiences.',
-      'language.select': 'Select Language',
-      'language.en': 'English',
-      'language.de': 'German',
-      'about.title': 'About Me',
-      'contact.title': 'Contact Me',
-      'about.paragraph1': 'As a dedicated Frontend Developer with a passion for modern web technologies, I bring solid knowledge in React, TypeScript, and JavaScript. My expertise includes the conception, development, and maintenance of interactive web applications and Shopware stores.',
-      'about.paragraph2': 'I place great importance on performance optimization, user-friendliness, and accessibility. Using agile methods like Scrum and an eye for detail, I create efficient and scalable solutions.',
-      'about.skillsTitle': 'Skills:',
-      'about.languagesTitle': 'Languages:',
-      'about.german': 'German (native speaker)',
-      'about.english': 'English (B2)',
-      'projects.title': 'Project Constellations',
-      'projects.subtitle': 'An interactive map of my work. Click a star to begin.',
-      'projects.instruction': 'Click a star to explore a project',
-      'contact.nameLabel': 'Name',
-      'contact.emailLabel': 'Email address',
-      'contact.messageLabel': 'Message',
-      'contact.submitButton': 'Send Message',
-      'about.careerPathTitle': 'Career Path',
-      'career.entry1': 'Starting my journey as a Junior Frontend Developer, I quickly immersed myself in modern web frameworks and best practices.',
-      'career.entry2': 'Over the years, I\'ve gained experience in building robust, user-friendly interfaces and contributing to various web projects.',
-      'dashboard.title': 'Planetary Data Dashboard',
-      'dashboard.subtitle': 'Explore fascinating facts about our solar system\'s planets.',
-      'dashboard.loading': 'Loading planetary data...',
-      'dashboard.error': 'Failed to load planetary data',
-      'dashboard.filterBy': 'Filter by',
-      'dashboard.allTypes': 'All Types',
-      'dashboard.sortBy': 'Sort by',
-      'dashboard.planetName': 'Name',
-      'dashboard.planetType': 'Type',
-      'dashboard.mass': 'Mass',
-      'dashboard.diameter': 'Diameter',
-      'dashboard.distance': 'Distance from Sun',
-      'dashboard.orbitalPeriod': 'Orbital Period',
-      'dashboard.minTemp': 'Min. Temp.',
-      'dashboard.type': 'Type',
-      'dashboard.temperature': 'Temperature',
-      'dashboard.days': 'days',
-      'project.technicalInsightsTitle': 'Technical Insights: How It Works',
-      'project.codeSnippetsTitle': 'Key Code Snippets',
-    },
-    de: {
-      'header.title': 'Mein Portfolio',
-      'nav.home': 'Startseite',
-      'nav.about': 'Über mich',
-      'nav.projects': 'Projekte',
-      'nav.contact': 'Kontakt',
-      'nav.dashboard': 'Planeten-Dashboard',
-      'hero.greeting': 'Hallo, ich bin',
-      'hero.name': 'Leon Hecke',
-      'hero.tagline': 'Ein kreativer Entwickler mit Leidenschaft für fesselnde Weberlebnisse.',
-      'language.select': 'Sprache wählen',
-      'language.en': 'Englisch',
-      'language.de': 'Deutsch',
-      'about.title': 'Über mich',
-      'contact.title': 'Kontaktieren Sie mich',
-      'about.paragraph1': 'Als engagierter Frontend-Entwickler mit einer Leidenschaft für moderne Webtechnologien bringe ich fundierte Kenntnisse in React, TypeScript und JavaScript mit. Meine Expertise umfasst die Konzeption, Entwicklung und Wartung von interaktiven Webanwendungen und Shopware-Shops.',
-      'about.paragraph2': 'Ich lege großen Wert auf Performance-Optimierung, Benutzerfreundlichkeit und Barrierefreiheit. Mit agilen Methoden wie Scrum und einem Auge für Details schaffe ich effiziente und skalierbare Lösungen.',
-      'about.skillsTitle': 'Qualifikationen:',
-      'about.languagesTitle': 'Sprachen:',
-      'about.german': 'Deutsch (Muttersprache)',
-      'about.english': 'Englisch (B2)',
-      'projects.title': 'Projekt-Konstellationen',
-      'projects.subtitle': 'Eine interaktive Karte meiner Arbeit. Klicken Sie auf einen Stern, um zu beginnen.',
-      'projects.instruction': 'Klicken Sie auf einen Stern, um ein Projekt zu erkunden',
-      'contact.nameLabel': 'Name',
-      'contact.emailLabel': 'E-Mail-Adresse',
-      'contact.messageLabel': 'Nachricht',
-      'contact.submitButton': 'Nachricht senden',
-      'about.careerPathTitle': 'Werdegang',
-      'career.entry1': 'Als Junior Frontend-Entwickler begann ich meine Reise und vertiefte mich schnell in moderne Web-Frameworks und Best Practices.',
-      'career.entry2': 'Im Laufe der Jahre sammelte ich Erfahrungen im Aufbau robuster, benutzerfreundlicher Oberflächen und trug zu verschiedenen Webprojekten bei.',
-      'dashboard.title': 'Planeten-Daten-Dashboard',
-      'dashboard.subtitle': 'Entdecken Sie faszinierende Fakten über die Planeten unseres Sonnensystems.',
-      'dashboard.loading': 'Planeten-Daten werden geladen...',
-      'dashboard.error': 'Fehler beim Laden der Planeten-Daten',
-      'dashboard.filterBy': 'Filtern nach',
-      'dashboard.allTypes': 'Alle Typen',
-      'dashboard.sortBy': 'Sortieren nach',
-      'dashboard.planetName': 'Name',
-      'dashboard.planetType': 'Typ',
-      'dashboard.mass': 'Masse',
-      'dashboard.diameter': 'Durchmesser',
-      'dashboard.distance': 'Entfernung zur Sonne',
-      'dashboard.orbitalPeriod': 'Umlaufzeit',
-      'dashboard.minTemp': 'Min. Temp.',
-      'dashboard.type': 'Typ',
-      'dashboard.temperature': 'Temperatur',
-      'dashboard.days': 'Tage',
-      'project.technicalInsightsTitle': 'Technische Einblicke: So funktioniert es',
-      'project.codeSnippetsTitle': 'Wichtige Code-Ausschnitte',
-    },
-  };
+  useEffect(() => {
+    document.documentElement.lang = language;
+    document.title = translations[language]['meta.title'];
+    try {
+      window.localStorage.setItem(STORAGE_KEY, language);
+    } catch {
+      // Not persisting is fine; the choice still applies for this visit.
+    }
+  }, [language]);
 
   // Translation function
   const t = (key: string): string => {
     return translations[language]?.[key] || key; // Fallback to key if translation not found
   };
 
-  const setLanguage = (lang: string) => {
-    if (translations[lang]) {
-      setLanguageState(lang);
-    } else {
-      console.warn(`Language '${lang}' not supported.`);
-    }
-  };
-
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t }}>
+    <LanguageContext.Provider value={{ language, setLanguage: setLanguageState, t }}>
       {children}
     </LanguageContext.Provider>
   );
 };
 
 // Custom hook to use the language context
+// eslint-disable-next-line react-refresh/only-export-components
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (context === undefined) {

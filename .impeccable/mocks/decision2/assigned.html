@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ordner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Semi+Condensed:wght@500;600&family=Courier+Prime&display=swap" rel="stylesheet">
+<style>
+  /* An opened office binder: grey board, one punched sheet, register tabs as the navigation. */
+  :root { --board:#b9b5ab; --board-2:#a8a398; --paper:#fbfaf6; --ink:#1f2125; --ink-2:#555a63; --rule:rgba(31,33,37,.14);
+          --tab-1:#9fc3e0; --tab-2:#f2d27a; --tab-3:#e9a3a0; --tab-4:#a9d3a8; --red:#c23a2b; }
+  html, body { margin:0; width:1440px; height:900px; overflow:hidden; background:#e7e4dd; font-family:'Barlow', sans-serif; color:var(--ink); }
+  .desk { position:absolute; inset:0; display:grid; place-items:center; }
+  .binder { position:relative; width:1180px; height:780px; display:grid; grid-template-columns: 300px 1fr; background:var(--board); border-radius:6px;
+            box-shadow: 0 30px 60px rgba(31,33,37,.18), 0 4px 10px rgba(31,33,37,.1); }
+  .cover { position:relative; padding:44px 36px; border-right:1px solid var(--board-2); }
+  .label { background:var(--paper); padding:18px 18px 22px; border:1px solid rgba(31,33,37,.2); }
+  .label small { display:block; font-family:'Barlow Semi Condensed'; font-weight:600; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-2); }
+  .label p { margin:8px 0 0; font-family:'Courier Prime', monospace; font-size:17px; line-height:1.4; }
+  .rings { position:absolute; left:343px; top:50%; transform:translateY(-50%); display:grid; gap:180px; z-index:3; }
+  .rings i { display:block; width:28px; height:28px; border-radius:50%; background:linear-gradient(145deg,#e9e9e9,#8f9196); box-shadow: 0 2px 3px rgba(0,0,0,.25); }
+  .sheet { position:relative; margin:22px 70px 22px 18px; background:var(--paper); box-shadow: 0 1px 2px rgba(31,33,37,.15); padding:64px 72px 56px 96px; }
+  .holes { position:absolute; left:28px; top:50%; transform:translateY(-50%); display:grid; gap:180px; }
+  .holes i { display:block; width:22px; height:22px; border-radius:50%; background:var(--board); box-shadow: inset 0 1px 2px rgba(0,0,0,.25); }
+  .kicker { font-family:'Barlow Semi Condensed'; font-weight:600; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-2); }
+  h1 { margin:18px 0 22px; font-weight:500; font-size:92px; line-height:.95; letter-spacing:-.025em; }
+  .lede { font-size:20px; line-height:1.55; color:var(--ink-2); max-width:36ch; margin:0 0 48px; }
+  table { border-collapse:collapse; width:100%; max-width:640px; font-size:16px; }
+  td { padding:12px 0; border-top:1px solid var(--rule); }
+  td:first-child { width:110px; font-family:'Courier Prime', monospace; color:var(--ink-2); }
+  td:last-child { text-align:right; color:var(--ink-2); font-family:'Barlow Semi Condensed'; font-weight:500; letter-spacing:.06em; text-transform:uppercase; font-size:12px; }
+  tr.on td:nth-child(2) { color:var(--red); }
+  .tabs { position:absolute; right:-46px; top:70px; display:grid; gap:10px; }
+  .tab { width:120px; height:110px; display:flex; align-items:center; justify-content:flex-end; padding-right:12px; border-radius:0 8px 8px 0;
+         font-family:'Barlow Semi Condensed'; font-weight:600; font-size:13px; letter-spacing:.1em; text-transform:uppercase; writing-mode:vertical-rl; transform:rotate(180deg); box-shadow: 1px 1px 2px rgba(31,33,37,.15); }
+  .t1 { background:var(--tab-1); } .t2 { background:var(--tab-2); } .t3 { background:var(--tab-3); } .t4 { background:var(--tab-4); }
+  .lang { position:absolute; top:24px; right:40px; font-family:'Barlow Semi Condensed'; font-weight:600; font-size:13px; letter-spacing:.1em; color:var(--ink-2); }
+</style>
+</head>
+<body>
+<div class="desk">
+  <div class="binder">
+    <div class="cover">
+      <div class="label"><small>Ordner</small><p>Leon Hecke<br>Frontend-Entwicklung<br>2021 – heute</p></div>
+    </div>
+    <div class="sheet">
+      <div class="holes"><i></i><i></i></div>
+      <div class="kicker">Deckblatt</div>
+      <h1>Leon Hecke</h1>
+      <p class="lede">Frontend-Entwickler für React, TypeScript und Shopware. Alles abgeheftet, nichts verloren.</p>
+      <table>
+        <tr class="on"><td>Blatt 1</td><td>CSS Grid Generator</td><td>Werkzeug</td></tr>
+        <tr><td>Blatt 2</td><td>Planetary Dashboard</td><td>Dashboard</td></tr>
+        <tr><td>Blatt 4</td><td>WIP Sandbox</td><td>In Arbeit</td></tr>
+      </table>
+    </div>
+    <div class="rings"><i></i><i></i></div>
+    <div class="tabs"><div class="tab t1">Arbeit</div><div class="tab t2">Werdegang</div><div class="tab t3">Können</div><div class="tab t4">Kontakt</div></div>
+  </div>
+</div>
+<div class="lang">DE · EN</div>
+</body>
+</html>

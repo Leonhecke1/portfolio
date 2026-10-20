@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raster</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  /* The layout grid is visible and the letters are built from its cells: the CSS grid as the armature. */
+  :root { --paper:#f7f7f4; --ink:#121317; --ink-2:#5b5f68; --grid:rgba(40,90,200,.13); --accent:#ff5a1f; --cell:40px; }
+  html, body { margin:0; width:1440px; height:900px; overflow:hidden; font-family:'Schibsted Grotesk', sans-serif; color:var(--ink);
+    background-color:var(--paper);
+    background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: var(--cell) var(--cell); }
+  header { position:absolute; top:0; left:0; right:0; height:80px; display:flex; align-items:center; gap:40px; padding:0 80px; font-weight:500; font-size:15px; }
+  header b { margin-right:auto; font-weight:700; }
+  .mono { position:absolute; left:80px; top:160px; display:grid; grid-template-columns: repeat(13, var(--cell)); grid-auto-rows: var(--cell); }
+  .mono i { background:var(--ink); }
+  .plane { position:absolute; left:640px; top:160px; width:200px; height:280px; background:var(--accent); }
+  .copy { position:absolute; left:880px; top:160px; width:440px; }
+  .copy h1 { margin:0 0 20px; font-weight:700; font-size:40px; line-height:1; letter-spacing:-.02em; }
+  .copy p { margin:0 0 40px; font-size:18px; line-height:1.55; color:var(--ink-2); }
+  .list { display:grid; border-top:2px solid var(--ink); }
+  .list div { display:flex; justify-content:space-between; height:var(--cell); align-items:center; border-bottom:1px solid rgba(18,19,23,.2); font-size:17px; }
+  .list span { color:var(--ink-2); font-size:14px; }
+  .note { position:absolute; left:80px; top:640px; width:520px; font-size:15px; line-height:1.6; color:var(--ink-2); }
+</style>
+</head>
+<body>
+<header><b>Leon Hecke</b><span>Arbeit</span><span>Werdegang</span><span>Kontakt</span><span>DE · EN</span></header>
+<!-- "LH" built cell by cell on the visible grid -->
+<div class="mono" id="m"></div>
+<div class="plane"></div>
+<div class="copy">
+  <h1>Frontend-Entwickler.<br>Gebaut auf dem Raster.</h1>
+  <p>React, TypeScript, Shopware. Jedes Projekt läuft hier live, mit dem Code dahinter.</p>
+  <div class="list">
+    <div>CSS Grid Generator <span>Werkzeug</span></div>
+    <div>Planetary Dashboard <span>Dashboard</span></div>
+    <div>WIP Sandbox <span>In Arbeit</span></div>
+  </div>
+</div>
+<p class="note">Das Raster ist kein Hintergrund: Es ist dasselbe CSS-Grid, auf dem die Buchstaben, die Liste und jede Projektseite stehen.</p>
+<script>
+  // L and H on a 13 x 11 cell grid.
+  const on = new Set();
+  for (let r = 0; r < 11; r++) { on.add(r*13+0); on.add(r*13+1); }
+  for (let c = 0; c < 5; c++) { on.add(9*13+c); on.add(10*13+c); }
+  for (let r = 0; r < 11; r++) { on.add(r*13+7); on.add(r*13+8); on.add(r*13+11); on.add(r*13+12); }
+  for (let c = 7; c < 13; c++) { on.add(5*13+c); }
+  const m = document.getElementById('m');
+  for (let i = 0; i < 13*11; i++) { const d = document.createElement(on.has(i) ? 'i' : 'span'); m.appendChild(d); }
+</script>
+</body>
+</html>
